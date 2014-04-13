@@ -6,10 +6,15 @@
 //  Copyright (c) 2014 Jared Jones. All rights reserved.
 //
 
+#define GLM_FORCE_RADIANS
+
 #include <iostream>
 #include <GL/glew.h>
 #include <OpenGL/OpenGL.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/trigonometric.hpp>
+#include <glm/gtx/transform.hpp>
 #include "ShaderLoader.h"
 
 int main(int argc, const char * argv[])
@@ -83,6 +88,19 @@ int main(int argc, const char * argv[])
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
+        
+        glm::mat4 Projection = glm::perspective(45.0f, 800.0f / 600.f, 0.1f, 100.0f);
+        glm::mat4 View = glm::lookAt(
+                                     glm::vec3(4,3,3),
+                                     glm::vec3(0,0,0),
+                                     glm::vec3(0,1,0)
+                                     );
+        glm::mat4 Model = glm::mat4(1.0f);
+        glm::mat4 MVP = Projection * View * Model;
+        
+        GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+        
         glUseProgram(programID);
         
         glEnableVertexAttribArray(0);
@@ -101,12 +119,12 @@ int main(int argc, const char * argv[])
         //END RENDERING
         
         
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
     
     glfwTerminate();
-    std::cout << "Hello, World!\n";
     return 0;
 }
 
