@@ -16,6 +16,7 @@
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/transform.hpp>
 #include "ShaderLoader.h"
+#include "StaticTmpShit.h"
 
 int main(int argc, const char * argv[])
 {
@@ -31,6 +32,7 @@ int main(int argc, const char * argv[])
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 8);
     
     window = glfwCreateWindow(800, 600, "UGLEngine", NULL, NULL);
     
@@ -56,6 +58,9 @@ int main(int argc, const char * argv[])
      */
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
+    //OpenGL Settings Here
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     
     
     
@@ -63,21 +68,29 @@ int main(int argc, const char * argv[])
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
     
-    static const GLfloat g_vertex_buffer_data[] = {
-        -1.0f, -1.0f, 1.0f,
-        1.0f, -1.0f, 1.0f,
-        0.0f,  1.0f, 1.0f,
-    };
-    
-    GLuint vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    GLuint vertexBuffer1;
+    glGenBuffers(1, &vertexBuffer1);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer1);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
     
+    GLuint colorBuffer1;
+    glGenBuffers(1, &colorBuffer1);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer1);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
     
-    GLuint programID = LoadShaders("/Users/jaredjones/Desktop/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Desktop/UGLEngine/UGLEngine/SimpleFragShader.fs");
+    GLuint vertexBuffer2;
+    glGenBuffers(1, &vertexBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data2), g_vertex_buffer_data2, GL_STATIC_DRAW);
     
+    GLuint colorBuffer2;
+    glGenBuffers(1, &colorBuffer2);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data2), g_color_buffer_data2, GL_STATIC_DRAW);
     
+    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
+    
+    float rotDeg = 0.0f;
     while (1)
     {
         if (glfwWindowShouldClose(window))
@@ -91,20 +104,21 @@ int main(int argc, const char * argv[])
         
         glm::mat4 Projection = glm::perspective(45.0f, 800.0f / 600.f, 0.1f, 100.0f);
         glm::mat4 View = glm::lookAt(
-                                     glm::vec3(4,3,3),
-                                     glm::vec3(0,0,0),
-                                     glm::vec3(0,1,0)
+                                     glm::vec3(0,0,3), //camera position
+                                     glm::vec3(0,0,0), //Camera looking at
+                                     glm::vec3(0,1,0) //Head is up
                                      );
-        glm::mat4 Model = glm::mat4(1.0f);
-        glm::mat4 MVP = Projection * View * Model;
+        rotDeg++;
+        glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
+        glm::mat4 MVPCube = Projection * View * ModelCube;
         
         GLuint MatrixID = glGetUniformLocation(programID, "MVP");
-        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPCube[0][0]);
         
         glUseProgram(programID);
         
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
         glVertexAttribPointer(
             0,
             3,
@@ -114,8 +128,51 @@ int main(int argc, const char * argv[])
             (void *)0
         );
         
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
+        glVertexAttribPointer(
+            1,
+            3,
+            GL_FLOAT,
+            GL_FALSE,
+            0,
+            (void *)0
+        );
+        
+        glDrawArrays(GL_TRIANGLES, 0, 3*12);
         glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        
+        glm::mat4 ModelTri = glm::translate(glm::vec3(2.0f, 0.0f, -2.0f));
+        glm::mat4 MVPTri = Projection * View * ModelTri;
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPTri[0][0]);
+        
+        glEnableVertexAttribArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer1);
+        glVertexAttribPointer(
+                              0,
+                              3,
+                              GL_FLOAT,
+                              GL_FALSE,
+                              0,
+                              (void *)0
+                              );
+        
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer1);
+        glVertexAttribPointer(
+                              1,
+                              3,
+                              GL_FLOAT,
+                              GL_FALSE,
+                              0,
+                              (void *)0
+                              );
+        
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
         //END RENDERING
         
         
