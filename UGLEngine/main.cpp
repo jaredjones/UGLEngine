@@ -45,6 +45,7 @@ int main(int argc, const char * argv[])
     
     //Makes a window the receiver for OpenGL Commands
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
     
     glewExperimental = GL_TRUE;
     glewInit();
@@ -91,8 +92,19 @@ int main(int argc, const char * argv[])
     GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
     
     float rotDeg = 0.0f;
+    double lastTime = glfwGetTime();
+    int nbFrames = 0;
     while (1)
     {
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+            // printf and reset timer
+            printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
+        
         if (glfwWindowShouldClose(window))
             break;
         
