@@ -18,6 +18,7 @@
 #include "ShaderLoader.h"
 #include "ImageLoader.h"
 #include "StaticTmpShit.h"
+#include "CameraController.h"
 
 int main(int argc, const char * argv[])
 {
@@ -119,21 +120,18 @@ int main(int argc, const char * argv[])
         if (glfwWindowShouldClose(window))
             break;
         
+        computeMatricesFromInputs(window);
+        
         //BEGIN RENDERING
         
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         
-        glm::mat4 Projection = glm::perspective(45.0f, 800.0f / 600.f, 0.1f, 100.0f);
-        glm::mat4 View = glm::lookAt(
-                                     glm::vec3(0,0,3), //camera position
-                                     glm::vec3(0,0,0), //Camera looking at
-                                     glm::vec3(0,1,0) //Head is up
-                                     );
+        
         rotDeg++;
         glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 0.0f));
-        glm::mat4 MVPCube = Projection * View * ModelCube;
+        glm::mat4 MVPCube = getProjectionMatrix() * getViewMatrix() * ModelCube;
         
         GLuint MatrixID = glGetUniformLocation(programID, "MVP");
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPCube[0][0]);
@@ -184,7 +182,7 @@ int main(int argc, const char * argv[])
         glDisableVertexAttribArray(1);
         
         glm::mat4 ModelTri = glm::translate(glm::vec3(2.0f, 0.0f, -2.0f));
-        glm::mat4 MVPTri = Projection * View * ModelTri;
+        glm::mat4 MVPTri = getProjectionMatrix() * getViewMatrix() * ModelTri;
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPTri[0][0]);
         
         glEnableVertexAttribArray(0);
