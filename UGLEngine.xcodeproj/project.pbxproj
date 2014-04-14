@@ -12,6 +12,7 @@
 		C016473618F44CDE006ECF98 /* Logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473418F44CDE006ECF98 /* Logging.cpp */; };
 		C016473A18F4509F006ECF98 /* libGLEW.1.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473918F4509F006ECF98 /* libGLEW.1.10.0.dylib */; };
 		C016473D18F466C7006ECF98 /* ShaderLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473B18F466C7006ECF98 /* ShaderLoader.cpp */; };
+		C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04B242218FB039600EF9CC2 /* ImageLoader.cpp */; };
 		C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09EF0CE18F4415C00C8D2D6 /* main.cpp */; };
 		C09EF0D118F4415C00C8D2D6 /* UGLEngine.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */; };
 /* End PBXBuildFile section */
@@ -40,6 +41,8 @@
 		C016473C18F466C7006ECF98 /* ShaderLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderLoader.h; sourceTree = "<group>"; };
 		C016473E18F4D35E006ECF98 /* SimpleVertexShader.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleVertexShader.vs; sourceTree = "<group>"; };
 		C016473F18F4D36C006ECF98 /* SimpleFragShader.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = SimpleFragShader.fs; sourceTree = "<group>"; };
+		C04B242218FB039600EF9CC2 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
+		C04B242318FB039600EF9CC2 /* ImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageLoader.h; sourceTree = "<group>"; };
 		C09EF0CB18F4415C00C8D2D6 /* UGLEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UGLEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09EF0CE18F4415C00C8D2D6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = UGLEngine.1; sourceTree = "<group>"; };
@@ -106,6 +109,8 @@
 				C016473C18F466C7006ECF98 /* ShaderLoader.h */,
 				C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */,
 				C0D876B518FAC4C2005A76DF /* StaticTmpShit.h */,
+				C04B242218FB039600EF9CC2 /* ImageLoader.cpp */,
+				C04B242318FB039600EF9CC2 /* ImageLoader.h */,
 			);
 			path = UGLEngine;
 			sourceTree = "<group>";
@@ -171,6 +176,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */,
 				C016473D18F466C7006ECF98 /* ShaderLoader.cpp in Sources */,
 				C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */,
 				C016473618F44CDE006ECF98 /* Logging.cpp in Sources */,

@@ -16,6 +16,7 @@
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/transform.hpp>
 #include "ShaderLoader.h"
+#include "ImageLoader.h"
 #include "StaticTmpShit.h"
 
 int main(int argc, const char * argv[])
@@ -61,8 +62,14 @@ int main(int argc, const char * argv[])
     
     //OpenGL Settings Here
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
     
+    
+    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
+    
+    GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/numbers.bmp");
+    GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     
     GLuint vertexArrayID;
@@ -89,7 +96,11 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data2), g_color_buffer_data2, GL_STATIC_DRAW);
     
-    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
+    GLuint uvbuffer;
+    glGenBuffers(1, &uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
+    
     
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
@@ -121,11 +132,17 @@ int main(int argc, const char * argv[])
                                      glm::vec3(0,1,0) //Head is up
                                      );
         rotDeg++;
-        glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
+        glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 0.0f));
         glm::mat4 MVPCube = Projection * View * ModelCube;
         
         GLuint MatrixID = glGetUniformLocation(programID, "MVP");
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPCube[0][0]);
+        
+        // Bind our texture in Texture Unit 0
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, Texture);
+        // Set our "myTextureSampler" sampler to user Texture Unit 0
+        glUniform1i(TextureID, 0);
         
         glUseProgram(programID);
         
@@ -140,7 +157,7 @@ int main(int argc, const char * argv[])
             (void *)0
         );
         
-        glEnableVertexAttribArray(1);
+        /*glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
         glVertexAttribPointer(
             1,
@@ -149,7 +166,18 @@ int main(int argc, const char * argv[])
             GL_FALSE,
             0,
             (void *)0
-        );
+        );*/
+        
+        glEnableVertexAttribArray(1);
+        glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+        glVertexAttribPointer(
+                              1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
+                              2,                                // size : U+V => 2
+                              GL_FLOAT,                         // type
+                              GL_FALSE,                         // normalized?
+                              0,                                // stride
+                              (void*)0                          // array buffer offset
+                              );
         
         glDrawArrays(GL_TRIANGLES, 0, 3*12);
         glDisableVertexAttribArray(0);
