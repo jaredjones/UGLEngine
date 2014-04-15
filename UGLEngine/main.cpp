@@ -19,6 +19,7 @@
 #include "ImageLoader.h"
 #include "StaticTmpShit.h"
 #include "CameraController.h"
+#include "OBJLoader.h"
 
 int main(int argc, const char * argv[])
 {
@@ -69,7 +70,7 @@ int main(int argc, const char * argv[])
     
     GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
     
-    GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/numbers.bmp");
+    GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap.bmp");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     
@@ -87,20 +88,30 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer1);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
     
+    //OBJ BEGIN TEST
+    vec3Storage verticies;
+    vec2Storage uvs;
+    vec3Storage normals;
+    
+    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/cube.obj", verticies, uvs, normals);
+    
     GLuint vertexBuffer2;
     glGenBuffers(1, &vertexBuffer2);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data2), g_vertex_buffer_data2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW);
+    
+    GLuint uvbuffer;
+    glGenBuffers(1, &uvbuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+    
+    //OBJ END TEST
+    
     
     GLuint colorBuffer2;
     glGenBuffers(1, &colorBuffer2);
     glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data2), g_color_buffer_data2, GL_STATIC_DRAW);
-    
-    GLuint uvbuffer;
-    glGenBuffers(1, &uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_STATIC_DRAW);
     
     
     float rotDeg = 0.0f;
@@ -112,7 +123,7 @@ int main(int argc, const char * argv[])
         nbFrames++;
         if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
             // printf and reset timer
-            printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
+            //printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
             nbFrames = 0;
             lastTime += 1.0;
         }

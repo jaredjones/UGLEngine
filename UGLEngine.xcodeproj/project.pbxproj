@@ -16,6 +16,7 @@
 		C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04B242218FB039600EF9CC2 /* ImageLoader.cpp */; };
 		C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09EF0CE18F4415C00C8D2D6 /* main.cpp */; };
 		C09EF0D118F4415C00C8D2D6 /* UGLEngine.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */; };
+		C0A801B518FD6F8C00484B0D /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,8 @@
 		C09EF0CB18F4415C00C8D2D6 /* UGLEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UGLEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09EF0CE18F4415C00C8D2D6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = UGLEngine.1; sourceTree = "<group>"; };
+		C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OBJLoader.cpp; sourceTree = "<group>"; };
+		C0A801B418FD6F8C00484B0D /* OBJLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBJLoader.h; sourceTree = "<group>"; };
 		C0D876B518FAC4C2005A76DF /* StaticTmpShit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticTmpShit.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -116,6 +119,8 @@
 				C04B242318FB039600EF9CC2 /* ImageLoader.h */,
 				C0208AF118FC432100792D5C /* CameraController.cpp */,
 				C0208AF218FC432100792D5C /* CameraController.h */,
+				C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */,
+				C0A801B418FD6F8C00484B0D /* OBJLoader.h */,
 			);
 			path = UGLEngine;
 			sourceTree = "<group>";
@@ -181,6 +186,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0A801B518FD6F8C00484B0D /* OBJLoader.cpp in Sources */,
 				C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */,
 				C016473D18F466C7006ECF98 /* ShaderLoader.cpp in Sources */,
 				C0208AF318FC432100792D5C /* CameraController.cpp in Sources */,

@@ -36,8 +36,8 @@ double lastYPos;
 
 void computeMatricesFromInputs(GLFWwindow* window)
 {
-    printf("H:%f V:%f\n", horizontalAngle, verticalAngle);
-    printf("X:%fY:%fZ:%f\n", position.x, position.y, position.z);
+    //printf("H:%f V:%f\n", horizontalAngle, verticalAngle);
+    //printf("X:%fY:%fZ:%f\n", position.x, position.y, position.z);
     static double lastTime = glfwGetTime();
     
     double currentTime = glfwGetTime();
