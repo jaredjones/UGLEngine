@@ -113,6 +113,6 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
         out_verticies.push_back(vertex);
         out_uvs.push_back(uv);
         out_normals.push_back(norm);
-    }    
+    }
     return true;
 }

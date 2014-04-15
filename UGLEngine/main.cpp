@@ -70,7 +70,7 @@ int main(int argc, const char * argv[])
     
     GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
     
-    GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap.bmp");
+    GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap2.bmp");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     
@@ -93,7 +93,7 @@ int main(int argc, const char * argv[])
     vec2Storage uvs;
     vec3Storage normals;
     
-    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/cube.obj", verticies, uvs, normals);
+    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/suzanne.obj", verticies, uvs, normals);
     
     GLuint vertexBuffer2;
     glGenBuffers(1, &vertexBuffer2);
@@ -188,7 +188,7 @@ int main(int argc, const char * argv[])
                               (void*)0                          // array buffer offset
                               );
         
-        glDrawArrays(GL_TRIANGLES, 0, 3*12);
+        glDrawArrays(GL_TRIANGLES, 0, 3*verticies.size());
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         
