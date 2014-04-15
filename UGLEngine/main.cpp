@@ -188,7 +188,7 @@ int main(int argc, const char * argv[])
                               (void*)0                          // array buffer offset
                               );
         
-        glDrawArrays(GL_TRIANGLES, 0, 3*verticies.size());
+        glDrawArrays(GL_TRIANGLES, 0, 3 * static_cast<GLuint>(verticies.size()));
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         
