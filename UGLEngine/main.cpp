@@ -153,8 +153,8 @@ int main(int argc, const char * argv[])
         glUseProgram(programID);
         
         rotDeg++;
-        //glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
-        glm::mat4 ModelCube = glm::mat4(1.0f);
+        glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
+        //glm::mat4 ModelCube = glm::mat4(1.0f);
         glm::mat4 MVPCube = getProjectionMatrix() * getViewMatrix() * ModelCube;
         
         
@@ -162,7 +162,7 @@ int main(int argc, const char * argv[])
         glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelCube[0][0]);
         glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
         
-        glm::vec3 lightPos = glm::vec3(4, 4, 4);
+        glm::vec3 lightPos = glm::vec3(4,4,4);
         glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
         
         // Bind our texture in Texture Unit 0
