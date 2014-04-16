@@ -68,15 +68,21 @@ int main(int argc, const char * argv[])
     glDepthFunc(GL_LESS);
     
     
+    GLuint vertexArrayID;
+    glGenVertexArrays(1, &vertexArrayID);
+    glBindVertexArray(vertexArrayID);
+    
+    
     GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
     
     GLuint Texture = loadBMP_custom("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap2.bmp");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
-    
-    GLuint vertexArrayID;
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
+    //Create a handle for the uniforms
+    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+    GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
+    GLuint LightID = glGetUniformLocation(programID, "LightPosition_workspace");
     
     GLuint vertexBuffer1;
     glGenBuffers(1, &vertexBuffer1);
@@ -104,6 +110,11 @@ int main(int argc, const char * argv[])
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
     glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+    
+    GLuint normalBuffer;
+    glGenBuffers(1, &normalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
     
     //OBJ END TEST
     
@@ -137,15 +148,21 @@ int main(int argc, const char * argv[])
         
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         
-        
+        glUseProgram(programID);
         
         rotDeg++;
         glm::mat4 ModelCube = glm::rotate(glm::mat4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 0.0f));
         glm::mat4 MVPCube = getProjectionMatrix() * getViewMatrix() * ModelCube;
         
-        GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+        
         glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPCube[0][0]);
+        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelCube[0][0]);
+        glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
+        
+        glm::vec3 lightPos = glm::vec3(4,4,4);
+        glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
         
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0);
@@ -153,7 +170,7 @@ int main(int argc, const char * argv[])
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(TextureID, 0);
         
-        glUseProgram(programID);
+        
         
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
@@ -166,16 +183,6 @@ int main(int argc, const char * argv[])
             (void *)0
         );
         
-        /*glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
-        glVertexAttribPointer(
-            1,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            (void *)0
-        );*/
         
         glEnableVertexAttribArray(1);
         glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
@@ -188,9 +195,23 @@ int main(int argc, const char * argv[])
                               (void*)0                          // array buffer offset
                               );
         
+        glEnableVertexAttribArray(2);
+        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+        glVertexAttribPointer(
+                              2,
+                              3,
+                              GL_FLOAT,
+                              GL_FALSE,
+                              0,
+                              (void*)0
+        );
+        
+        
+        
         glDrawArrays(GL_TRIANGLES, 0, 3 * static_cast<GLuint>(verticies.size()));
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
         
         glm::mat4 ModelTri = glm::translate(glm::vec3(2.0f, 0.0f, -2.0f));
         glm::mat4 MVPTri = getProjectionMatrix() * getViewMatrix() * ModelTri;
