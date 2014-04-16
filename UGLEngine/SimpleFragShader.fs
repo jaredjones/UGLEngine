@@ -22,5 +22,5 @@ void main()
     
     float cosTheta = clamp(dot(n, l),0,1);
     vec3 lightColor = vec3(1.0, 1.0, 1.0);
-    color = vec4( lightColor *cosTheta, 1.0);
+    color = vec4(text* lightColor *cosTheta, 1.0);
 }

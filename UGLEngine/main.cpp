@@ -82,7 +82,7 @@ int main(int argc, const char * argv[])
     GLuint MatrixID = glGetUniformLocation(programID, "MVP");
     GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
     GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-    GLuint LightID = glGetUniformLocation(programID, "LightPosition_workspace");
+    GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
     
     GLuint vertexBuffer1;
     glGenBuffers(1, &vertexBuffer1);
@@ -162,7 +162,7 @@ int main(int argc, const char * argv[])
         glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelCube[0][0]);
         glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
         
-        glm::vec3 lightPos = glm::vec3(4, 0, 0);
+        glm::vec3 lightPos = glm::vec3(4, 4, 4);
         glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
         
         // Bind our texture in Texture Unit 0
