@@ -15,10 +15,14 @@ out vec4 color;
 
 void main()
 {
-    vec3 lightColor = vec3(1,1,1);
-	float lightPower = 50.0f;
+    vec3 MaterialDiffuseColor = texture(myTextureSampler, UV).rgb;
     
-    vec3 text = texture(myTextureSampler, UV).rgb;
+    vec3 lightColor = vec3(1,1,1);
+    vec3 ambientLight = vec3(0.1, 0.1, 0.1);
+    vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+    vec3 MaterialAmbientColor = ambientLight * MaterialDiffuseColor;
+    
+	float lightPower = 50.0f;
     
     vec3 n = normalize(Normal_cameraspace);
     vec3 l = normalize(LightDirection_cameraspace);
@@ -26,8 +30,6 @@ void main()
     float cosTheta = clamp(dot(n, l),0,1);
     
     float distance = length( LightPosition_worldspace - Position_worldspace );
-    
-    vec3 MaterialAmbientColor = vec3(0.2,0.2,0.2) * text;
     
     // Eye vector (towards the camera)
     vec3 E = normalize(EyeDirection_cameraspace);
@@ -40,6 +42,6 @@ void main()
     float cosAlpha = clamp( dot( E,R ), 0,1 );
     
     color = vec4(MaterialAmbientColor +
-                 text * lightColor * lightPower * cosTheta / (distance*distance) +
-                 vec3(0.2,0.2,0.2) * lightColor * lightPower * pow(cosAlpha,5) / (distance*distance), 1.0);
+                 MaterialDiffuseColor * lightColor * lightPower * cosTheta / (distance*distance) +
+                 MaterialSpecularColor * lightColor * lightPower * pow(cosAlpha,5) / (distance*distance), 1.0);
 }
