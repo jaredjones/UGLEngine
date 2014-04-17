@@ -20,6 +20,7 @@
 #include "StaticTmpShit.h"
 #include "CameraController.h"
 #include "OBJLoader.h"
+#include "VBOIndexer.h"
 
 int main(int argc, const char * argv[])
 {
@@ -84,16 +85,6 @@ int main(int argc, const char * argv[])
     GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
     GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
     
-    GLuint vertexBuffer1;
-    glGenBuffers(1, &vertexBuffer1);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer1);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    
-    GLuint colorBuffer1;
-    glGenBuffers(1, &colorBuffer1);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer1);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data), g_color_buffer_data, GL_STATIC_DRAW);
-    
     //OBJ BEGIN TEST
     vec3Storage verticies;
     vec2Storage uvs;
@@ -101,20 +92,31 @@ int main(int argc, const char * argv[])
     
     loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/suzanne.obj", verticies, uvs, normals);
     
+    uShortStorage indices;
+    vec3Storage indexedVertices;
+    vec2Storage indexedUvs;
+    vec3Storage indexedNormals;
+    indexVBO(verticies, uvs, normals, indices, indexedVertices, indexedUvs, indexedNormals);
+    
     GLuint vertexBuffer2;
     glGenBuffers(1, &vertexBuffer2);
     glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
-    glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
     
     GLuint uvbuffer;
     glGenBuffers(1, &uvbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
-    glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, indexedUvs.size() * sizeof(glm::vec2), &indexedUvs[0], GL_STATIC_DRAW);
     
     GLuint normalBuffer;
     glGenBuffers(1, &normalBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
-    glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), &normals[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
+    
+    GLuint elementBuffer;
+    glGenBuffers(1, &elementBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
     
     //OBJ END TEST
     
@@ -207,9 +209,41 @@ int main(int argc, const char * argv[])
                               (void*)0
         );
         
+        //Index Buffer
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+        
+        glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_SHORT, (void *)0);
+        
+        //glDrawArrays(GL_TRIANGLES, 0, static_cast<GLuint>(verticies.size()));
         
         
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLuint>(verticies.size()));
+        
+        //Begin Second Model
+		glm::mat4 ModelMatrix2 = glm::mat4(1.0);
+		ModelMatrix2 = glm::translate(ModelMatrix2, glm::vec3(1.5f, 2.0f, 0.0f));
+		glm::mat4 MVP2 = getProjectionMatrix() * getViewMatrix() * ModelMatrix2;
+        
+		//Send our transformation to the currently bound shader, in the "MVP" uniform
+		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
+		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix2[0][0]);
+        
+    
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+        
+		glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_SHORT, (void *)0);
+        
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
@@ -221,6 +255,14 @@ int main(int argc, const char * argv[])
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    
+    glDeleteBuffers(1, &vertexBuffer2);
+    glDeleteBuffers(1, &uvbuffer);
+    glDeleteBuffers(1, &normalBuffer);
+    glDeleteBuffers(1, &elementBuffer);
+    glDeleteProgram(programID);
+    glDeleteTextures(1, &Texture);
+    glDeleteVertexArrays(1, &vertexArrayID);
     
     glfwTerminate();
     return 0;

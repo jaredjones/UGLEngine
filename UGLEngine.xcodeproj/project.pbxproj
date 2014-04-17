@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C012504118FFD81C00618720 /* VBOIndexer.cpp */; };
 		C016473018F44629006ECF98 /* libglfw.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C016472F18F44629006ECF98 /* libglfw.3.1.dylib */; };
 		C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473118F44631006ECF98 /* OpenGL.framework */; };
 		C016473618F44CDE006ECF98 /* Logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473418F44CDE006ECF98 /* Logging.cpp */; };
@@ -33,6 +34,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C012504118FFD81C00618720 /* VBOIndexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBOIndexer.cpp; sourceTree = "<group>"; };
+		C012504218FFD81C00618720 /* VBOIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBOIndexer.h; sourceTree = "<group>"; };
 		C016472F18F44629006ECF98 /* libglfw.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.1.dylib; path = /usr/local/lib/libglfw.3.1.dylib; sourceTree = "<absolute>"; };
 		C016473118F44631006ECF98 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C016473418F44CDE006ECF98 /* Logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logging.cpp; path = Logging/Logging.cpp; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 				C0208AF218FC432100792D5C /* CameraController.h */,
 				C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */,
 				C0A801B418FD6F8C00484B0D /* OBJLoader.h */,
+				C012504118FFD81C00618720 /* VBOIndexer.cpp */,
+				C012504218FFD81C00618720 /* VBOIndexer.h */,
 			);
 			path = UGLEngine;
 			sourceTree = "<group>";
@@ -192,6 +197,7 @@
 				C0208AF318FC432100792D5C /* CameraController.cpp in Sources */,
 				C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */,
 				C016473618F44CDE006ECF98 /* Logging.cpp in Sources */,
+				C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
