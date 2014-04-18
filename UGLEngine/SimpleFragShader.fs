@@ -19,7 +19,7 @@ void main()
     
     vec3 lightColor = vec3(1,1,1);
     vec3 ambientLight = vec3(0.1, 0.1, 0.1);
-    vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+    vec3 MaterialSpecularColor = vec3(0.2,0.2,0.2);
     vec3 MaterialAmbientColor = ambientLight * MaterialDiffuseColor;
     
 	float lightPower = 50.0f;
@@ -41,7 +41,9 @@ void main()
     //  - Looking elsewhere -> < 1
     float cosAlpha = clamp( dot( E,R ), 0,1 );
     
-    color = vec4(MaterialAmbientColor +
+    color.rgb = MaterialAmbientColor +
                  MaterialDiffuseColor * lightColor * lightPower * cosTheta / (distance*distance) +
-                 MaterialSpecularColor * lightColor * lightPower * pow(cosAlpha,5) / (distance*distance), 1.0);
+                 MaterialSpecularColor * lightColor * lightPower * pow(cosAlpha,5) / (distance*distance);
+    
+    color.a = 1.0;
 }
