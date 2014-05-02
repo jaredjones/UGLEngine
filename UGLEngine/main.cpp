@@ -94,7 +94,7 @@ int main(int argc, const char * argv[])
     vec2Storage uvs;
     vec3Storage normals;
     
-    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/suzanne.obj", vertices, uvs, normals);
+    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/suzanne.dickslather", vertices, uvs, normals);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
@@ -128,7 +128,7 @@ int main(int argc, const char * argv[])
     vertices.clear();
     uvs.clear();
     normals.clear();
-    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/floor.obj", vertices, uvs, normals);
+    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/floor.dickslather", vertices, uvs, normals);
     
     uShortStorage indicesFloor;
     indexedVertices.clear();
