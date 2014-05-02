@@ -22,6 +22,8 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
+
+
 int main(int argc, const char * argv[])
 {
     GLFWwindow *window;
@@ -76,9 +78,9 @@ int main(int argc, const char * argv[])
     glBindVertexArray(vertexArrayID);
     
     
-    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
+    GLuint programID = LoadShaders("/Users/bradzeis/projects/uglengine/UGLEngine/SimpleVertexShader.vs", "/Users/bradzeis/projects/uglengine/UGLEngine/SimpleFragShader.fs");
     
-    GLuint Texture = loadDDS("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap.DDS");
+    GLuint Texture = loadDDS("/Users/bradzeis/projects/uglengine/UGLEngine/uvmap.DDS");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     //Create a handle for the uniforms
@@ -88,46 +90,73 @@ int main(int argc, const char * argv[])
     GLuint LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
     
     //OBJ BEGIN TEST
-    vec3Storage verticies;
+    vec3Storage vertices;
     vec2Storage uvs;
     vec3Storage normals;
     
-    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/suzanne.obj", verticies, uvs, normals);
+    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/suzanne.obj", vertices, uvs, normals);
     
-    uShortStorage indices;
+    uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
     vec2Storage indexedUvs;
     vec3Storage indexedNormals;
-    indexVBO(verticies, uvs, normals, indices, indexedVertices, indexedUvs, indexedNormals);
+    indexVBO(vertices, uvs, normals, indicesSuzanne, indexedVertices, indexedUvs, indexedNormals);
     
-    GLuint vertexBuffer2;
-    glGenBuffers(1, &vertexBuffer2);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+    GLuint vertexBufferSuzanne;
+    glGenBuffers(1, &vertexBufferSuzanne);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
     glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
     
-    GLuint uvbuffer;
-    glGenBuffers(1, &uvbuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+    GLuint uvBufferSuzanne;
+    glGenBuffers(1, &uvBufferSuzanne);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
     glBufferData(GL_ARRAY_BUFFER, indexedUvs.size() * sizeof(glm::vec2), &indexedUvs[0], GL_STATIC_DRAW);
     
-    GLuint normalBuffer;
-    glGenBuffers(1, &normalBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+    GLuint normalBufferSuzanne;
+    glGenBuffers(1, &normalBufferSuzanne);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
     glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
     
-    GLuint elementBuffer;
-    glGenBuffers(1, &elementBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
+    GLuint elementBufferSuzanne;
+    glGenBuffers(1, &elementBufferSuzanne);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesSuzanne.size() * sizeof(unsigned short), &indicesSuzanne[0], GL_STATIC_DRAW);
     
     //OBJ END TEST
     
+    // OBJ FLOOR
+    vertices.clear();
+    uvs.clear();
+    normals.clear();
+    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/floor.obj", vertices, uvs, normals);
     
-    GLuint colorBuffer2;
-    glGenBuffers(1, &colorBuffer2);
-    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer2);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_color_buffer_data2), g_color_buffer_data2, GL_STATIC_DRAW);
+    uShortStorage indicesFloor;
+    indexedVertices.clear();
+    indexedUvs.clear();
+    indexedNormals.clear();
+    indexVBO(vertices, uvs, normals, indicesFloor, indexedVertices, indexedUvs, indexedNormals);
+
+    GLuint vertexBufferFloor;
+    glGenBuffers(1, &vertexBufferFloor);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferFloor);
+    glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
     
+    GLuint uvBufferFloor;
+    glGenBuffers(1, &uvBufferFloor);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBufferFloor);
+    glBufferData(GL_ARRAY_BUFFER, indexedUvs.size() * sizeof(glm::vec2), &indexedUvs[0], GL_STATIC_DRAW);
+    
+    GLuint normalBufferFloor;
+    glGenBuffers(1, &normalBufferFloor);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBufferFloor);
+    glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
+    
+    GLuint elementBufferFloor;
+    glGenBuffers(1, &elementBufferFloor);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferFloor);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesFloor.size() * sizeof(unsigned short), &indicesFloor[0], GL_STATIC_DRAW);
+    
+    // OBJ END FLOOR
     
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
@@ -178,7 +207,7 @@ int main(int argc, const char * argv[])
         
         
         glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
         glVertexAttribPointer(
             0,
             3,
@@ -190,7 +219,7 @@ int main(int argc, const char * argv[])
         
         
         glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
         glVertexAttribPointer(
                               1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
                               2,                                // size : U+V => 2
@@ -201,7 +230,7 @@ int main(int argc, const char * argv[])
                               );
         
         glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
         glVertexAttribPointer(
                               2,
                               3,
@@ -212,11 +241,9 @@ int main(int argc, const char * argv[])
         );
         
         //Index Buffer
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
         
-        glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_SHORT, (void *)0);
-        
-        //glDrawArrays(GL_TRIANGLES, 0, static_cast<GLuint>(verticies.size()));
+        glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
         
         
         
@@ -231,20 +258,43 @@ int main(int argc, const char * argv[])
         
     
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer2);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
 		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
         
-		glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_SHORT, (void *)0);
+		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
+        
+        
+        // Begin Floor
+        glm::mat4 ModelFloor = glm::translate(glm::mat4(1.0), glm::vec3(0, -2.5f, 0));
+        glm::mat4 MVPFloor = getProjectionMatrix() * getViewMatrix() * ModelFloor;
+        
+        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPFloor[0][0]);
+        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelFloor[0][0]);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferFloor);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBufferFloor);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBufferFloor);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+        
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferFloor);
+        
+		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesFloor.size()), GL_UNSIGNED_SHORT, (void *)0);
         
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
@@ -258,10 +308,10 @@ int main(int argc, const char * argv[])
         glfwPollEvents();
     }
     
-    glDeleteBuffers(1, &vertexBuffer2);
-    glDeleteBuffers(1, &uvbuffer);
-    glDeleteBuffers(1, &normalBuffer);
-    glDeleteBuffers(1, &elementBuffer);
+    glDeleteBuffers(1, &vertexBufferSuzanne);
+    glDeleteBuffers(1, &uvBufferSuzanne);
+    glDeleteBuffers(1, &normalBufferSuzanne);
+    glDeleteBuffers(1, &elementBufferSuzanne);
     glDeleteProgram(programID);
     glDeleteTextures(1, &Texture);
     glDeleteVertexArrays(1, &vertexArrayID);

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A9C181611914339000969023 /* libglfw3.3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C181601914339000969023 /* libglfw3.3.0.dylib */; };
 		C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C012504118FFD81C00618720 /* VBOIndexer.cpp */; };
-		C016473018F44629006ECF98 /* libglfw.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C016472F18F44629006ECF98 /* libglfw.3.1.dylib */; };
 		C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473118F44631006ECF98 /* OpenGL.framework */; };
 		C016473618F44CDE006ECF98 /* Logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473418F44CDE006ECF98 /* Logging.cpp */; };
 		C016473A18F4509F006ECF98 /* libGLEW.1.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473918F4509F006ECF98 /* libGLEW.1.10.0.dylib */; };
@@ -34,9 +34,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A9C181601914339000969023 /* libglfw3.3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.0.dylib; path = /usr/local/Cellar/glfw3/3.0.4/lib/libglfw3.3.0.dylib; sourceTree = "<absolute>"; };
 		C012504118FFD81C00618720 /* VBOIndexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBOIndexer.cpp; sourceTree = "<group>"; };
 		C012504218FFD81C00618720 /* VBOIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBOIndexer.h; sourceTree = "<group>"; };
-		C016472F18F44629006ECF98 /* libglfw.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.1.dylib; path = /usr/local/lib/libglfw.3.1.dylib; sourceTree = "<absolute>"; };
 		C016473118F44631006ECF98 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C016473418F44CDE006ECF98 /* Logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logging.cpp; path = Logging/Logging.cpp; sourceTree = "<group>"; };
 		C016473518F44CDE006ECF98 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logging.h; path = Logging/Logging.h; sourceTree = "<group>"; };
@@ -63,9 +63,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9C181611914339000969023 /* libglfw3.3.0.dylib in Frameworks */,
 				C016473A18F4509F006ECF98 /* libGLEW.1.10.0.dylib in Frameworks */,
 				C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */,
-				C016473018F44629006ECF98 /* libglfw.3.1.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,8 +134,8 @@
 			isa = PBXGroup;
 			children = (
 				C016473918F4509F006ECF98 /* libGLEW.1.10.0.dylib */,
+				A9C181601914339000969023 /* libglfw3.3.0.dylib */,
 				C016473118F44631006ECF98 /* OpenGL.framework */,
-				C016472F18F44629006ECF98 /* libglfw.3.1.dylib */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -287,6 +287,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glew/1.10.0/lib,
+					/usr/local/Cellar/glfw3/3.0.4/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -305,6 +306,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glew/1.10.0/lib,
+					/usr/local/Cellar/glfw3/3.0.4/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

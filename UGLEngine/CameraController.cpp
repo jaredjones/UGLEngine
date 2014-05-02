@@ -16,7 +16,7 @@ glm::mat4 ViewMatrix = glm::lookAt(
                                    glm::vec3(0,0,0), //Camera looking at
                                    glm::vec3(0,1,0) //Head is up
                                    );
-glm::mat4 ProjectionMatrix = glm::perspective(45.0f, 800.0f / 600.f, 0.1f, 100.0f);
+glm::mat4 ProjectionMatrix = glm::perspective(90.0f, 800.0f / 600.f, 0.1f, 100.0f);
 
 // Initial position : on +Z
 glm::vec3 position = glm::vec3( 1, 1, 4 );
