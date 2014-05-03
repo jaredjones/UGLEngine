@@ -12,7 +12,7 @@
 
 #include "OBJLoader.h"
 
-bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals)
+bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool &hasQuads)
 {
     std::vector<unsigned int> vIndices, uvIndices, normalIndices;
     vec3Storage tmpVerts;
@@ -70,17 +70,19 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
         
         if (word == "f")
         {
-            std::string v1, v2, v3;
-            lStream >> v1 >> v2 >> v3;
+            std::string v1, v2, v3, v4;
+            lStream >> v1 >> v2 >> v3 >> v4;
             std::istringstream vS1(v1);
             std::istringstream vS2(v2);
             std::istringstream vS3(v3);
+            std::istringstream vS4(v4);
             
             int x;
             char a;
             int y;
             char b;
             int z;
+            
             vS1 >> x >> a >> y >> b >> z;
             vIndices.push_back(x);
             uvIndices.push_back(y);
@@ -95,6 +97,15 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
             vIndices.push_back(x);
             uvIndices.push_back(y);
             normalIndices.push_back(z);
+            
+            if (!v4.empty())
+            {
+                vS4 >> x >> a >> y >> b >> z;
+                vIndices.push_back(x);
+                uvIndices.push_back(y);
+                normalIndices.push_back(z);
+                hasQuads = true;
+            }
             continue;
         }
         

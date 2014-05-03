@@ -16,6 +16,6 @@
 typedef std::vector <glm::vec3> vec3Storage;
 typedef std::vector <glm::vec2> vec2Storage;
 
-bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals);
+bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool &hasQuads);
 
 #endif /* defined(__UGLEngine__OBJLoader__) */

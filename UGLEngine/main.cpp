@@ -15,13 +15,13 @@
 #include <glm/glm.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtx/transform.hpp>
-#include "ShaderLoader.h"
+
+#include "WorldModelContainer.h"
 #include "ImageLoader.h"
 #include "StaticTmpShit.h"
 #include "CameraController.h"
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
-
 
 
 int main(int argc, const char * argv[])
@@ -65,22 +65,19 @@ int main(int argc, const char * argv[])
      */
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
-    //OpenGL Settings Here
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glDepthFunc(GL_LESS);
+    sWMC.Init();
+    sWMC.CompileAndStoreShader("simpleshader", "Resources/Shaders/SimpleVertexShader.vs", "Resources/Shaders/SimpleFragShader.fs");
     
+    GLuint programID;
+    
+    bool shaderExists = sWMC.GetShader("simpleshader", programID);
+    shaderExists = shaderExists;
     
     GLuint vertexArrayID;
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
     
-    
-    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
-    
-    GLuint Texture = loadDDS("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap.DDS");
+    GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     //Create a handle for the uniforms
@@ -93,8 +90,9 @@ int main(int argc, const char * argv[])
     vec3Storage vertices;
     vec2Storage uvs;
     vec3Storage normals;
+    bool hasQuads;
     
-    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/suzanne.dickslather", vertices, uvs, normals);
+    loadOBJ("Resources/Models/suzanne.dickslather", vertices, uvs, normals, hasQuads);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
@@ -128,8 +126,8 @@ int main(int argc, const char * argv[])
     vertices.clear();
     uvs.clear();
     normals.clear();
-    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/floor.dickslather", vertices, uvs, normals);
-    
+    loadOBJ("Resources/Models/floor.dickslather", vertices, uvs, normals, hasQuads);
+
     uShortStorage indicesFloor;
     indexedVertices.clear();
     indexedUvs.clear();
@@ -257,15 +255,12 @@ int main(int argc, const char * argv[])
 		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix2[0][0]);
         
     
-		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
-		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
-		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
         
