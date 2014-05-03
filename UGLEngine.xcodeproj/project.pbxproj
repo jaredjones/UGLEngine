@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A9C181611914339000969023 /* libglfw3.3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C181601914339000969023 /* libglfw3.3.0.dylib */; };
 		C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C012504118FFD81C00618720 /* VBOIndexer.cpp */; };
 		C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473118F44631006ECF98 /* OpenGL.framework */; };
 		C016473618F44CDE006ECF98 /* Logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473418F44CDE006ECF98 /* Logging.cpp */; };
@@ -15,6 +14,7 @@
 		C016473D18F466C7006ECF98 /* ShaderLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473B18F466C7006ECF98 /* ShaderLoader.cpp */; };
 		C0208AF318FC432100792D5C /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0208AF118FC432100792D5C /* CameraController.cpp */; };
 		C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04B242218FB039600EF9CC2 /* ImageLoader.cpp */; };
+		C075173819148D720016DA95 /* libglfw.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C075173719148D720016DA95 /* libglfw.3.1.dylib */; };
 		C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09EF0CE18F4415C00C8D2D6 /* main.cpp */; };
 		C09EF0D118F4415C00C8D2D6 /* UGLEngine.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */; };
 		C0A801B518FD6F8C00484B0D /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */; };
@@ -50,6 +50,7 @@
 		C0208AF218FC432100792D5C /* CameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraController.h; sourceTree = "<group>"; };
 		C04B242218FB039600EF9CC2 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
 		C04B242318FB039600EF9CC2 /* ImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageLoader.h; sourceTree = "<group>"; };
+		C075173719148D720016DA95 /* libglfw.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.1.dylib; path = ../../../../usr/local/lib/libglfw.3.1.dylib; sourceTree = "<group>"; };
 		C09EF0CB18F4415C00C8D2D6 /* UGLEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UGLEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09EF0CE18F4415C00C8D2D6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = UGLEngine.1; sourceTree = "<group>"; };
@@ -63,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A9C181611914339000969023 /* libglfw3.3.0.dylib in Frameworks */,
+				C075173819148D720016DA95 /* libglfw.3.1.dylib in Frameworks */,
 				C016473A18F4509F006ECF98 /* libGLEW.1.10.0.dylib in Frameworks */,
 				C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */,
 			);
@@ -92,6 +93,7 @@
 		C09EF0C218F4415C00C8D2D6 = {
 			isa = PBXGroup;
 			children = (
+				C075173719148D720016DA95 /* libglfw.3.1.dylib */,
 				C0D876B418FAC1B8005A76DF /* Libraries */,
 				C09EF0CD18F4415C00C8D2D6 /* UGLEngine */,
 				C09EF0CC18F4415C00C8D2D6 /* Products */,
@@ -287,7 +289,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glew/1.10.0/lib,
-					/usr/local/Cellar/glfw3/3.0.4/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -306,7 +307,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/usr/local/Cellar/glew/1.10.0/lib,
-					/usr/local/Cellar/glfw3/3.0.4/lib,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

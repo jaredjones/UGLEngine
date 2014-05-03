@@ -78,9 +78,9 @@ int main(int argc, const char * argv[])
     glBindVertexArray(vertexArrayID);
     
     
-    GLuint programID = LoadShaders("/Users/bradzeis/projects/uglengine/UGLEngine/SimpleVertexShader.vs", "/Users/bradzeis/projects/uglengine/UGLEngine/SimpleFragShader.fs");
+    GLuint programID = LoadShaders("/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleVertexShader.vs", "/Users/jaredjones/Developer/UGLEngine/UGLEngine/SimpleFragShader.fs");
     
-    GLuint Texture = loadDDS("/Users/bradzeis/projects/uglengine/UGLEngine/uvmap.DDS");
+    GLuint Texture = loadDDS("/Users/jaredjones/Developer/UGLEngine/UGLEngine/uvmap.DDS");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     //Create a handle for the uniforms
@@ -94,7 +94,7 @@ int main(int argc, const char * argv[])
     vec2Storage uvs;
     vec3Storage normals;
     
-    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/suzanne.dickslather", vertices, uvs, normals);
+    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/suzanne.dickslather", vertices, uvs, normals);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
@@ -128,7 +128,7 @@ int main(int argc, const char * argv[])
     vertices.clear();
     uvs.clear();
     normals.clear();
-    loadOBJ("/Users/bradzeis/projects/uglengine/UGLEngine/floor.dickslather", vertices, uvs, normals);
+    loadOBJ("/Users/jaredjones/Developer/UGLEngine/UGLEngine/floor.dickslather", vertices, uvs, normals);
     
     uShortStorage indicesFloor;
     indexedVertices.clear();
