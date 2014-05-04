@@ -15,8 +15,25 @@
 #include <mutex>
 #include <unordered_map>
 #include <string>
+#include <vector>
+
+#include "VBOIndexer.h"
 
 #define sWMC WorldModelContainer::getInstance()
+
+struct ObjectRawHolder
+{
+    vec3Storage vertices;
+    vec2Storage uvs;
+    vec3Storage normals;
+    
+    uShortStorage indicesVBO;
+    vec3Storage indexedVertices;
+    vec2Storage indexedUvs;
+    vec3Storage indexedNormals;
+    
+    bool hasQuads;
+};
 
 class WorldModelContainer
 {
@@ -28,6 +45,9 @@ public:
     void Init();
     bool CompileAndStoreShader(std::string name, std::string vertexPath, std::string fragPath);
     bool GetShader(std::string name, GLuint &programID);
+    bool MeshInMemory(std::string path);
+    ObjectRawHolder* GetMeshInMemory(std::string path);
+    bool AddMeshToMemory(std::string path, ObjectRawHolder* holder);//DO NOT USE! Use Model3D instead for creating meshes. (*Read implementation file comments.*)
     void RenderACycle();
     
     static WorldModelContainer& getInstance()
@@ -43,6 +63,8 @@ private:
     LockType _wMCLock;
     
     std::unordered_map<std::string, GLuint> _shaderMap;
+    std::unordered_map<std::string, ObjectRawHolder*> _objectMap;
+    
     
     GLuint _compileShader(std::string vertexPath, std::string fragPath, bool &error);
     

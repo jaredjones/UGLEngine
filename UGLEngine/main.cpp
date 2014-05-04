@@ -18,7 +18,7 @@
 
 #include "WorldModelContainer.h"
 #include "ImageLoader.h"
-#include "StaticTmpShit.h"
+#include "Model3D.h"
 #include "CameraController.h"
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
@@ -76,6 +76,9 @@ int main(int argc, const char * argv[])
     GLuint vertexArrayID;
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
+    
+    
+    Model3D *myTest = new Model3D("Resources/Models/Trash_can.obj", false);
     
     //GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
     GLuint Texture = loadBMP_custom("Resources/Images/Trash_Can.bmp");

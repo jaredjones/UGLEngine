@@ -110,6 +110,8 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
         }
         
     }
+    if (vIndices.size() >= 65535)
+        printf("WARNING: This mesh is over UINT16 in size, rendering issues may arrise if you use VBOIndexing! This warning isn't checking to see if VBOIndexing is used. However if this warning ever fires please contact Jared immediately, as it is likely an appropriate time to fix the weakness in the engine.\n");
     for (unsigned int i = 0; i < vIndices.size(); i++)
     {
         unsigned int vIndex = vIndices[i];

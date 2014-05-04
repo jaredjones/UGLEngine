@@ -23,6 +23,7 @@ void WorldModelContainer::Init()
     glEnable(GL_CULL_FACE);
     glDepthFunc(GL_LESS);
 }
+
 GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string fragPath, bool &error)
 {
     // Create the shaders
@@ -109,6 +110,7 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     
     return ProgramID;
 }
+
 bool WorldModelContainer::CompileAndStoreShader(std::string name, std::string vertexPath, std::string fragPath)
 {
     GuardType guard(_wMCLock);
@@ -130,6 +132,7 @@ bool WorldModelContainer::CompileAndStoreShader(std::string name, std::string ve
     _shaderMap.insert(std::make_pair(name, programID));
     return true;
 }
+
 bool WorldModelContainer::GetShader(std::string name, GLuint &programID)
 {
     GuardType guard(_wMCLock);
@@ -142,7 +145,45 @@ bool WorldModelContainer::GetShader(std::string name, GLuint &programID)
     programID = _shaderMap[name];
     return true;
 }
+
 void WorldModelContainer::RenderACycle()
 {
     
+}
+
+bool WorldModelContainer::MeshInMemory(std::string path)
+{
+    GuardType guard(_wMCLock);
+    std::unordered_map<std::string,ObjectRawHolder*>::const_iterator got = _objectMap.find (path);
+    if (got == _objectMap.end())
+        return false;
+    
+    return true;
+}
+
+ObjectRawHolder* WorldModelContainer::GetMeshInMemory(std::string path)
+{
+    GuardType guard(_wMCLock);
+    std::unordered_map<std::string,ObjectRawHolder*>::const_iterator got = _objectMap.find (path);
+    if (got == _objectMap.end())
+    {
+        printf("WARNING: You attempted to get a mesh in program memory that does not exist!\n");
+        return NULL;
+    }
+    return _objectMap[path];
+}
+
+//This method is public ONLY for future advanced features. DO NOT use this unless you know what you're doing. Use Model3D instead for creating meshes!
+//Misuse of this method could cause memory errors and could devistatingly place the application in a corrupt state.
+bool WorldModelContainer::AddMeshToMemory(std::string path, ObjectRawHolder* holder)
+{
+    GuardType guard(_wMCLock);
+    std::unordered_map<std::string,ObjectRawHolder*>::const_iterator got = _objectMap.find (path);
+    if (got != _objectMap.end())
+    {
+        printf("WARNING: You're attempting to add a mesh into memory that already exists. Delete it first! This method is advanced and should not be called manually, use Model3D for implementing meshes.\n");
+        return false;
+    }
+    _objectMap.insert(std::make_pair(path, holder));
+    return true;
 }
