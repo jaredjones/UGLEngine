@@ -115,8 +115,8 @@ bool WorldModelContainer::CompileAndStoreShader(std::string name, std::string ve
     std::unordered_map<std::string,GLuint>::const_iterator got = _shaderMap.find (name);
     if (got != _shaderMap.end())
     {
-        printf("WARNING: The shader:%s already exists under programID:%d, there we're NOT compiling this shader!\
-               If you want to recompile this shader, delete it first!\n", name.c_str(), _shaderMap[name]);
+        printf("WARNING: The shader:%s already exists under programID:%d, therefore we're NOT compiling this shader! If you want to recompile this shader, delete it first!\n",
+               name.c_str(), _shaderMap[name]);
         return false;
     }
     bool compileFailed = false;

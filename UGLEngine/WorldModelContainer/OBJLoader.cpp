@@ -110,13 +110,12 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
         }
         
     }
-    
     for (unsigned int i = 0; i < vIndices.size(); i++)
     {
         unsigned int vIndex = vIndices[i];
         unsigned int uvIndex = uvIndices[i];
         unsigned int normIndex = normalIndices[i];
-        
+
         glm::vec3 vertex = tmpVerts[vIndex - 1];
         glm::vec2 uv = tmpUvs[uvIndex - 1];
         glm::vec3 norm = tmpNorms[normIndex - 1];

@@ -7,17 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C012504118FFD81C00618720 /* VBOIndexer.cpp */; };
 		C016473218F44631006ECF98 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473118F44631006ECF98 /* OpenGL.framework */; };
 		C016473618F44CDE006ECF98 /* Logging.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C016473418F44CDE006ECF98 /* Logging.cpp */; };
 		C016473A18F4509F006ECF98 /* libGLEW.1.10.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C016473918F4509F006ECF98 /* libGLEW.1.10.0.dylib */; };
+		C017A6101915CB18003991FF /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C017A60C1915CB18003991FF /* OBJLoader.cpp */; };
+		C017A6111915CB18003991FF /* VBOIndexer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C017A60E1915CB18003991FF /* VBOIndexer.cpp */; };
 		C0208AF318FC432100792D5C /* CameraController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0208AF118FC432100792D5C /* CameraController.cpp */; };
 		C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C04B242218FB039600EF9CC2 /* ImageLoader.cpp */; };
 		C075173819148D720016DA95 /* libglfw.3.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C075173719148D720016DA95 /* libglfw.3.1.dylib */; };
 		C075173C19149B6B0016DA95 /* WorldModelContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C075173A19149B6B0016DA95 /* WorldModelContainer.cpp */; };
 		C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C09EF0CE18F4415C00C8D2D6 /* main.cpp */; };
 		C09EF0D118F4415C00C8D2D6 /* UGLEngine.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */; };
-		C0A801B518FD6F8C00484B0D /* OBJLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,13 +35,15 @@
 
 /* Begin PBXFileReference section */
 		A9C181601914339000969023 /* libglfw3.3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw3.3.0.dylib; path = /usr/local/Cellar/glfw3/3.0.4/lib/libglfw3.3.0.dylib; sourceTree = "<absolute>"; };
-		C012504118FFD81C00618720 /* VBOIndexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VBOIndexer.cpp; sourceTree = "<group>"; };
-		C012504218FFD81C00618720 /* VBOIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VBOIndexer.h; sourceTree = "<group>"; };
 		C016473118F44631006ECF98 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C016473418F44CDE006ECF98 /* Logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logging.cpp; path = Logging/Logging.cpp; sourceTree = "<group>"; };
 		C016473518F44CDE006ECF98 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logging.h; path = Logging/Logging.h; sourceTree = "<group>"; };
 		C016473818F44D6E006ECF98 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = Shared/Common.h; sourceTree = "<group>"; };
 		C016473918F4509F006ECF98 /* libGLEW.1.10.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.1.10.0.dylib; path = /usr/local/Cellar/glew/1.10.0/lib/libGLEW.1.10.0.dylib; sourceTree = "<absolute>"; };
+		C017A60C1915CB18003991FF /* OBJLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OBJLoader.cpp; path = WorldModelContainer/OBJLoader.cpp; sourceTree = "<group>"; };
+		C017A60D1915CB18003991FF /* OBJLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OBJLoader.h; path = WorldModelContainer/OBJLoader.h; sourceTree = "<group>"; };
+		C017A60E1915CB18003991FF /* VBOIndexer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VBOIndexer.cpp; path = WorldModelContainer/VBOIndexer.cpp; sourceTree = "<group>"; };
+		C017A60F1915CB18003991FF /* VBOIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VBOIndexer.h; path = WorldModelContainer/VBOIndexer.h; sourceTree = "<group>"; };
 		C0208AF118FC432100792D5C /* CameraController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraController.cpp; sourceTree = "<group>"; };
 		C0208AF218FC432100792D5C /* CameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraController.h; sourceTree = "<group>"; };
 		C04B242218FB039600EF9CC2 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
@@ -63,8 +65,6 @@
 		C09EF0CB18F4415C00C8D2D6 /* UGLEngine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = UGLEngine; sourceTree = BUILT_PRODUCTS_DIR; };
 		C09EF0CE18F4415C00C8D2D6 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		C09EF0D018F4415C00C8D2D6 /* UGLEngine.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = UGLEngine.1; sourceTree = "<group>"; };
-		C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OBJLoader.cpp; sourceTree = "<group>"; };
-		C0A801B418FD6F8C00484B0D /* OBJLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OBJLoader.h; sourceTree = "<group>"; };
 		C0D876B518FAC4C2005A76DF /* StaticTmpShit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StaticTmpShit.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,6 +102,10 @@
 		C075173919149A930016DA95 /* WorldModelContainer */ = {
 			isa = PBXGroup;
 			children = (
+				C017A60C1915CB18003991FF /* OBJLoader.cpp */,
+				C017A60D1915CB18003991FF /* OBJLoader.h */,
+				C017A60E1915CB18003991FF /* VBOIndexer.cpp */,
+				C017A60F1915CB18003991FF /* VBOIndexer.h */,
 				C075173A19149B6B0016DA95 /* WorldModelContainer.cpp */,
 				C075173B19149B6B0016DA95 /* WorldModelContainer.h */,
 			);
@@ -182,10 +186,6 @@
 				C04B242318FB039600EF9CC2 /* ImageLoader.h */,
 				C0208AF118FC432100792D5C /* CameraController.cpp */,
 				C0208AF218FC432100792D5C /* CameraController.h */,
-				C0A801B318FD6F8C00484B0D /* OBJLoader.cpp */,
-				C0A801B418FD6F8C00484B0D /* OBJLoader.h */,
-				C012504118FFD81C00618720 /* VBOIndexer.cpp */,
-				C012504218FFD81C00618720 /* VBOIndexer.h */,
 			);
 			path = UGLEngine;
 			sourceTree = "<group>";
@@ -251,13 +251,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0A801B518FD6F8C00484B0D /* OBJLoader.cpp in Sources */,
+				C017A6101915CB18003991FF /* OBJLoader.cpp in Sources */,
 				C04B242418FB039600EF9CC2 /* ImageLoader.cpp in Sources */,
 				C0208AF318FC432100792D5C /* CameraController.cpp in Sources */,
 				C075173C19149B6B0016DA95 /* WorldModelContainer.cpp in Sources */,
 				C09EF0CF18F4415C00C8D2D6 /* main.cpp in Sources */,
 				C016473618F44CDE006ECF98 /* Logging.cpp in Sources */,
-				C012504318FFD81C00618720 /* VBOIndexer.cpp in Sources */,
+				C017A6111915CB18003991FF /* VBOIndexer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

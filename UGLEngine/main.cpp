@@ -77,7 +77,8 @@ int main(int argc, const char * argv[])
     glGenVertexArrays(1, &vertexArrayID);
     glBindVertexArray(vertexArrayID);
     
-    GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
+    //GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
+    GLuint Texture = loadBMP_custom("Resources/Images/Trash_Can.bmp");
     GLuint TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     //Create a handle for the uniforms
@@ -92,7 +93,7 @@ int main(int argc, const char * argv[])
     vec3Storage normals;
     bool hasQuads;
     
-    loadOBJ("Resources/Models/suzanne.dickslather", vertices, uvs, normals, hasQuads);
+    loadOBJ("Resources/Models/Trash_Can.obj", vertices, uvs, normals, hasQuads);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
@@ -159,6 +160,7 @@ int main(int argc, const char * argv[])
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
+    float lightZ = 4;
     while (1)
     {
         double currentTime = glfwGetTime();
@@ -179,7 +181,7 @@ int main(int argc, const char * argv[])
         
         
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
+        glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
         
         glUseProgram(programID);
         
@@ -193,7 +195,9 @@ int main(int argc, const char * argv[])
         glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelCube[0][0]);
         glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
         
-        glm::vec3 lightPos = glm::vec3(4,4,4);
+        glm::vec3 lightPos = glm::vec3(4*cos(lightZ),4,4*sin(lightZ));
+        lightZ +=.03;
+        
         glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
         
         // Bind our texture in Texture Unit 0
