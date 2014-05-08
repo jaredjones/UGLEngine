@@ -92,7 +92,7 @@ int main(int argc, const char * argv[])
     vec3Storage normals;
     bool hasQuads;
     
-    loadOBJ("Resources/Models/suzanne.wvf", vertices, uvs, normals, hasQuads);
+    loadOBJ("Resources/Models/trashcan.wvf", vertices, uvs, normals, hasQuads);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
