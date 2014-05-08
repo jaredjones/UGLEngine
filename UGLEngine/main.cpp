@@ -70,10 +70,8 @@ int main(int argc, const char * argv[])
     
     GLuint programID;
     
-    bool shaderExists = sWMC.GetShader("simpleshader", programID);
-    shaderExists = shaderExists;
-
     
+    sWMC.GetShader("simpleshader", programID);
     //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
     
     //GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
@@ -178,7 +176,6 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
     glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
     
-    
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
@@ -231,10 +228,9 @@ int main(int argc, const char * argv[])
         
         //Index Buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
-        
         glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
         
-//        
+        
 //        //Begin Second Model
 //		glm::mat4 ModelMatrix2 = glm::mat4(1.0);
 //		ModelMatrix2 = glm::translate(ModelMatrix2, glm::vec3(1.5f, 2.0f, 0.0f));
@@ -246,7 +242,7 @@ int main(int argc, const char * argv[])
 //        
 //    
 //		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
-//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//
 //        
 //		glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
 //		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
@@ -280,10 +276,7 @@ int main(int argc, const char * argv[])
 //		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferFloor);
 //        
 //		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesFloor.size()), GL_UNSIGNED_SHORT, (void *)0);
-        
-//        glDisableVertexAttribArray(0);
-//        glDisableVertexAttribArray(1);
-//        glDisableVertexAttribArray(2);
+//        
         
         //END RENDERING
         
@@ -293,6 +286,10 @@ int main(int argc, const char * argv[])
         glfwPollEvents();
     }
     
+    
+    //        glDisableVertexAttribArray(0);
+    //        glDisableVertexAttribArray(1);
+    //        glDisableVertexAttribArray(2);
     glDeleteBuffers(1, &vertexBufferSuzanne);
     glDeleteBuffers(1, &uvBufferSuzanne);
     glDeleteBuffers(1, &normalBufferSuzanne);
