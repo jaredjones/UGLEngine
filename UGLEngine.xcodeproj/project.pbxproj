@@ -51,7 +51,6 @@
 		C0208AF218FC432100792D5C /* CameraController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraController.h; sourceTree = "<group>"; };
 		C04B242218FB039600EF9CC2 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
 		C04B242318FB039600EF9CC2 /* ImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageLoader.h; sourceTree = "<group>"; };
-		C075173719148D720016DA95 /* libglfw.3.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.1.dylib; path = ../../../../usr/local/lib/libglfw.3.1.dylib; sourceTree = "<group>"; };
 		C075173A19149B6B0016DA95 /* WorldModelContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WorldModelContainer.cpp; path = WorldModelContainer/WorldModelContainer.cpp; sourceTree = "<group>"; };
 		C075173B19149B6B0016DA95 /* WorldModelContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WorldModelContainer.h; path = WorldModelContainer/WorldModelContainer.h; sourceTree = "<group>"; };
 		C07517431914ACE80016DA95 /* numbers.bmp */ = {isa = PBXFileReference; lastKnownFileType = image.bmp; path = numbers.bmp; sourceTree = "<group>"; };
@@ -161,7 +160,6 @@
 		C09EF0C218F4415C00C8D2D6 = {
 			isa = PBXGroup;
 			children = (
-				C075173719148D720016DA95 /* libglfw.3.1.dylib */,
 				C0D876B418FAC1B8005A76DF /* Libraries */,
 				C09EF0CD18F4415C00C8D2D6 /* UGLEngine */,
 				C09EF0CC18F4415C00C8D2D6 /* Products */,

@@ -72,13 +72,9 @@ int main(int argc, const char * argv[])
     
     bool shaderExists = sWMC.GetShader("simpleshader", programID);
     shaderExists = shaderExists;
+
     
-    GLuint vertexArrayID;
-    glGenVertexArrays(1, &vertexArrayID);
-    glBindVertexArray(vertexArrayID);
-    
-    
-    Model3D *myTest = new Model3D("Resources/Models/Trash_can.obj", false);
+    //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
     
     //GLuint Texture = loadDDS("Resources/Images/uvmap.DDS");
     GLuint Texture = loadBMP_custom("Resources/Images/Trash_Can.bmp");
@@ -96,7 +92,7 @@ int main(int argc, const char * argv[])
     vec3Storage normals;
     bool hasQuads;
     
-    loadOBJ("Resources/Models/Trash_Can.obj", vertices, uvs, normals, hasQuads);
+    loadOBJ("Resources/Models/suzanne.wvf", vertices, uvs, normals, hasQuads);
     
     uShortStorage indicesSuzanne;
     vec3Storage indexedVertices;
@@ -130,7 +126,7 @@ int main(int argc, const char * argv[])
     vertices.clear();
     uvs.clear();
     normals.clear();
-    loadOBJ("Resources/Models/floor.dickslather", vertices, uvs, normals, hasQuads);
+    loadOBJ("Resources/Models/floor.wvf", vertices, uvs, normals, hasQuads);
 
     uShortStorage indicesFloor;
     indexedVertices.clear();
@@ -159,6 +155,29 @@ int main(int argc, const char * argv[])
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indicesFloor.size() * sizeof(unsigned short), &indicesFloor[0], GL_STATIC_DRAW);
     
     // OBJ END FLOOR
+
+    GLuint vertexArrayID;
+    glGenVertexArrays(1, &vertexArrayID);
+    glBindVertexArray(vertexArrayID);
+    
+    // attribute. No particular reason for 1, but must match the layout in the shader.
+    // size : U+V => 2
+    // type
+    // normalized?
+    // stride
+    // array buffer offset
+    glEnableVertexAttribArray(15);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
+    glVertexAttribPointer(15,3,GL_FLOAT,GL_FALSE,0,(void *)0);
+    
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
+    glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,0,(void*)0);
+    
+    glEnableVertexAttribArray(2);
+    glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
+    glVertexAttribPointer(2,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+    
     
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
@@ -208,99 +227,63 @@ int main(int argc, const char * argv[])
         glBindTexture(GL_TEXTURE_2D, Texture);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(TextureID, 0);
-        
-        
-        
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
-        glVertexAttribPointer(
-            0,
-            3,
-            GL_FLOAT,
-            GL_FALSE,
-            0,
-            (void *)0
-        );
-        
-        
-        glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
-        glVertexAttribPointer(
-                              1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
-                              2,                                // size : U+V => 2
-                              GL_FLOAT,                         // type
-                              GL_FALSE,                         // normalized?
-                              0,                                // stride
-                              (void*)0                          // array buffer offset
-                              );
-        
-        glEnableVertexAttribArray(2);
-        glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
-        glVertexAttribPointer(
-                              2,
-                              3,
-                              GL_FLOAT,
-                              GL_FALSE,
-                              0,
-                              (void*)0
-        );
+     
         
         //Index Buffer
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
         
         glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
         
+//        
+//        //Begin Second Model
+//		glm::mat4 ModelMatrix2 = glm::mat4(1.0);
+//		ModelMatrix2 = glm::translate(ModelMatrix2, glm::vec3(1.5f, 2.0f, 0.0f));
+//		glm::mat4 MVP2 = getProjectionMatrix() * getViewMatrix() * ModelMatrix2;
+//        
+//		//Send our transformation to the currently bound shader, in the "MVP" uniform
+//		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
+//		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix2[0][0]);
+//        
+//    
+//		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
+//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
+//		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
+//		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
+//        
+//		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
+//        
+//        
+//        // Begin Floor
+//        glm::mat4 ModelFloor = glm::translate(glm::mat4(1.0), glm::vec3(0, -2.5f, 0));
+//        glm::mat4 MVPFloor = getProjectionMatrix() * getViewMatrix() * ModelFloor;
+//        
+//        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPFloor[0][0]);
+//        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelFloor[0][0]);
+//        
+//        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferFloor);
+//		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glEnableVertexAttribArray(1);
+//		glBindBuffer(GL_ARRAY_BUFFER, uvBufferFloor);
+//		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glEnableVertexAttribArray(2);
+//		glBindBuffer(GL_ARRAY_BUFFER, normalBufferFloor);
+//		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+//        
+//		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferFloor);
+//        
+//		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesFloor.size()), GL_UNSIGNED_SHORT, (void *)0);
         
-        
-        //Begin Second Model
-		glm::mat4 ModelMatrix2 = glm::mat4(1.0);
-		ModelMatrix2 = glm::translate(ModelMatrix2, glm::vec3(1.5f, 2.0f, 0.0f));
-		glm::mat4 MVP2 = getProjectionMatrix() * getViewMatrix() * ModelMatrix2;
-        
-		//Send our transformation to the currently bound shader, in the "MVP" uniform
-		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
-		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix2[0][0]);
-        
-    
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBufferSuzanne);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glBindBuffer(GL_ARRAY_BUFFER, uvBufferSuzanne);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glBindBuffer(GL_ARRAY_BUFFER, normalBufferSuzanne);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferSuzanne);
-        
-		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesSuzanne.size()), GL_UNSIGNED_SHORT, (void *)0);
-        
-        
-        // Begin Floor
-        glm::mat4 ModelFloor = glm::translate(glm::mat4(1.0), glm::vec3(0, -2.5f, 0));
-        glm::mat4 MVPFloor = getProjectionMatrix() * getViewMatrix() * ModelFloor;
-        
-        glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVPFloor[0][0]);
-        glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelFloor[0][0]);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBufferFloor);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBufferFloor);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, normalBufferFloor);
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-        
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBufferFloor);
-        
-		glDrawElements(GL_TRIANGLES, static_cast<int>(indicesFloor.size()), GL_UNSIGNED_SHORT, (void *)0);
-        
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
+//        glDisableVertexAttribArray(0);
+//        glDisableVertexAttribArray(1);
+//        glDisableVertexAttribArray(2);
         
         //END RENDERING
         

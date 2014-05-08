@@ -1,11 +1,11 @@
 #version 410 core
 
-layout(location=0) in vec3 vertexPosition_modelspace;
+layout(location=15) in vec3 vertexPosition_modelspace;
 layout(location=1) in vec2 vertexUV;
 layout(location=2) in vec3 vertexNormal_modelspace;
 //layout(location=1) in vec3 vertexColor;
 
-//Constant Values for the entire mesh.
+//Constant Values for each runthrough of the shader.
 uniform mat4 MVP;
 uniform mat4 V;
 uniform mat4 M;
