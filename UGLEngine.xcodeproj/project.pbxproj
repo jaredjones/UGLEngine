@@ -43,6 +43,8 @@
 		7FC6B47619A3AF190057A077 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		7FC6B47819A3AF270057A077 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		7FC6B47A19A3AF2F0057A077 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		7FC6B47C19A512350057A077 /* Skybox.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Skybox.vsh; sourceTree = "<group>"; };
+		7FC6B47D19A512470057A077 /* Skybox.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Skybox.fsh; sourceTree = "<group>"; };
 		C016473118F44631006ECF98 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		C016473418F44CDE006ECF98 /* Logging.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Logging.cpp; path = Logging/Logging.cpp; sourceTree = "<group>"; };
 		C016473518F44CDE006ECF98 /* Logging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Logging.h; path = Logging/Logging.h; sourceTree = "<group>"; };
@@ -160,8 +162,10 @@
 		C075174D1914ACE80016DA95 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				C075174E1914ACE80016DA95 /* Lit.fsh */,
+				7FC6B47C19A512350057A077 /* Skybox.vsh */,
+				7FC6B47D19A512470057A077 /* Skybox.fsh */,
 				C075174F1914ACE80016DA95 /* Lit.vsh */,
+				C075174E1914ACE80016DA95 /* Lit.fsh */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";

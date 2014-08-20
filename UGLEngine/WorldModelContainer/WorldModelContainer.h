@@ -44,7 +44,7 @@ public:
     
     void Init();
     bool CompileAndStoreShader(std::string name, std::string vertexPath, std::string fragPath);
-    bool GetShader(std::string name, GLuint &programID);
+    GLuint GetShader(std::string name);
     bool MeshInMemory(std::string path);
     ObjectRawHolder* GetMeshInMemory(std::string path);
     bool AddMeshToMemory(std::string path, ObjectRawHolder* holder);//DO NOT USE! Use Model3D instead for creating meshes. (*Read implementation file comments.*)

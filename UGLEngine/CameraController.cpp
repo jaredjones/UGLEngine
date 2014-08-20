@@ -16,6 +16,7 @@ glm::mat4 ViewMatrix = glm::lookAt(
                                    glm::vec3(0,0,0), //Camera looking at
                                    glm::vec3(0,1,0) //Head is up
                                    );
+glm::mat4 ViewMatrixWithoutTranslation = ViewMatrix;
 glm::mat4 ProjectionMatrix = glm::perspective(90.0f, 800.0f / 600.f, 0.1f, 100.0f);
 
 // Initial position : on +Z
@@ -113,12 +114,16 @@ void computeMatricesFromInputs(GLFWwindow* window)
     float FoV = initialFoV;// - 5 * glfwGetMouseWheel();
     ProjectionMatrix = glm::perspective(FoV, 800.0f/600.0f, 0.1f, 100.0f);
     ViewMatrix = glm::lookAt(position, position+direction, up);
-    
+    ViewMatrixWithoutTranslation = glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), direction, up);
     
     lastXPos = curxpos;
     lastYPos = curypos;
     lastTime = currentTime;
     
+}
+glm::mat4 getViewMatrixWithoutTranslation()
+{
+    return ViewMatrixWithoutTranslation;
 }
 glm::mat4 getViewMatrix()
 {

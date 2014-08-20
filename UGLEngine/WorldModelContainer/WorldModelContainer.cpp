@@ -21,6 +21,7 @@ void WorldModelContainer::Init()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
+    glFrontFace(GL_CCW);
     glDepthFunc(GL_LESS);
 }
 
@@ -133,17 +134,16 @@ bool WorldModelContainer::CompileAndStoreShader(std::string name, std::string ve
     return true;
 }
 
-bool WorldModelContainer::GetShader(std::string name, GLuint &programID)
+GLuint WorldModelContainer::GetShader(std::string name)
 {
     GuardType guard(_wMCLock);
     std::unordered_map<std::string,GLuint>::const_iterator got = _shaderMap.find (name);
     if (got == _shaderMap.end())
     {
         printf("WARNING: The shader:%s does not exist in program memory! Please CompileAndStoreShader first!\n", name.c_str());
-        return false;
+        return 0;
     }
-    programID = _shaderMap[name];
-    return true;
+    return _shaderMap[name];
 }
 
 void WorldModelContainer::RenderACycle()
