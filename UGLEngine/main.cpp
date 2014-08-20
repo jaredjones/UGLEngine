@@ -66,8 +66,8 @@ int main(int argc, const char * argv[])
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
     sWMC.Init();
-    sWMC.CompileAndStoreShader("lit", "Resources/Shaders/Lit.vsh", "Resources/Shaders/Lit.fsh");
-    sWMC.CompileAndStoreShader("skybox", "Resources/Shaders/Skybox.vsh", "Resources/Shaders/Skybox.fsh");
+    sWMC.CompileAndStoreShader("lit", "Shaders/Lit.vsh", "Shaders/Lit.fsh");
+    sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
     
     GLuint programID = sWMC.GetShader("lit");
     //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
