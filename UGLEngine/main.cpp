@@ -83,8 +83,8 @@ int main(int argc, const char * argv[])
     GLuint Lit_TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     programID = sWMC.GetShader("skybox");
-    //GLuint SkyboxTexture = loadBMP_custom("Resources/Images/JaredSkybox.bmp");
-    GLuint SkyboxTexture = loadDDS("Resources/Images/skybox.dds");
+    GLuint SkyboxTexture = loadBMP_custom("Resources/Images/JaredSkybox.bmp");
+    //GLuint SkyboxTexture = loadDDS("Resources/Images/skybox.dds");
     
     //Create a handle for the uniforms
     GLuint Skybox_MVPID = glGetUniformLocation(programID, "MVP");
