@@ -16,7 +16,7 @@ DerivedData
 *.hmap
 *.ipa
 
-UGLEngine/Resources
+Resources
 
 # CocoaPods
 #

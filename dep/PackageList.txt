@@ -1,0 +1,7 @@
+jemalloc (a general-purpose scalable concurrent malloc-implementation)
+  http://www.canonware.com/jemalloc/
+  Version: 3.3.1
+
+utf8-cpp (UTF-8 with C++ in a Portable Way)
+  http://utfcpp.sourceforge.net/
+  Version: 2.3.4
