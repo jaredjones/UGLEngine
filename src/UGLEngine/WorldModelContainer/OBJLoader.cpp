@@ -50,9 +50,28 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
         
         if (word == "v")
         {
-            float x, y, z;
-            lStream >> x >> y >> z;
-            tmpVerts.push_back(glm::vec3(x, y, z));
+			std::string triad;
+			triad = lStream.str();
+
+			float indices[3];
+
+			int mark = 2;
+			int current = 0;
+			//std::cout << triad << ' '; //COUT
+			for (int i = 2; i < triad.length(); i++){
+				if (triad[i] == ' '){
+					if (mark != i){
+						indices[current] = atof(triad.substr(mark, (i - mark)).c_str());
+						//std::cout << triad.substr(mark, (i - mark)) << ' '; //COUT
+					}
+					mark = i + 1;
+					current++;
+				}
+			}
+			indices[current] = atof(triad.substr(mark, (triad.length()) - mark).c_str()); //get last element
+			//std::cout << triad.substr(mark, (triad.length()) - mark) << std::endl; //COUT
+
+			tmpVerts.push_back(glm::vec3(indices[0], indices[1], indices[2]));
         }
         
         else if (word == "vt")
