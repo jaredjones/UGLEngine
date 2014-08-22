@@ -68,7 +68,7 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
     if (&VertexShaderErrorMessage[0] != nullptr)
     {
-        error = true;
+        //error = true;
         fprintf(stdout, "%s\n", &VertexShaderErrorMessage[0]);
     }
     
@@ -85,7 +85,7 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
     if (&FragmentShaderErrorMessage[0] != nullptr)
     {
-        error = true;
+        //error = true;
         fprintf(stdout, "%s\n", &FragmentShaderErrorMessage[0]);
     }
     
@@ -104,7 +104,7 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
         fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
     
     if (InfoLogLength != 0)
-        error = true;
+        //error = true;
     
     glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
