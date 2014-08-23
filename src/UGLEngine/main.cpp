@@ -67,14 +67,14 @@ int main(int argc, const char * argv[])
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
     sWMC.Init();
-    sWMC.CompileAndStoreShader("lit", "J:/c++/UGLEngine/build/bin/Debug/Shaders/Lit.vsh", "Shaders/Lit.fsh");
-    sWMC.CompileAndStoreShader("skybox", "J:/c++/UGLEngine/build/bin/Debug/Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
+    sWMC.CompileAndStoreShader("lit", "Shaders/Lit.vsh", "Shaders/Lit.fsh");
+    sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
     
     GLuint programID = sWMC.GetShader("lit");
     //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
     
     //GLuint TrashcanTexture = loadDDS("Resources/Images/uvmap.DDS");
-    GLuint TrashcanTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan.bmp");
+    GLuint TrashcanTexture = loadBMP_custom("Resources/Images/trashcan.bmp");
     
     //Create a handle for the uniforms
     GLuint Lit_MVPID = glGetUniformLocation(programID, "MVP");
@@ -84,7 +84,7 @@ int main(int argc, const char * argv[])
     GLuint Lit_TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     
     programID = sWMC.GetShader("skybox");
-    GLuint SkyboxTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/JaredSkybox.bmp");
+    GLuint SkyboxTexture = loadBMP_custom("Resources/Images/JaredSkybox.bmp");
     //GLuint SkyboxTexture = loadDDS("Resources/Images/skybox.dds");
     
     //Create a handle for the uniforms
@@ -97,9 +97,7 @@ int main(int argc, const char * argv[])
     vec2Storage indexedUvs;
     vec3Storage indexedNormals;
     
-	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/BlenderBlobWithNormals.obj", vboIndices, indexedVertices, indexedUvs, indexedNormals);
-    
-	printf("%d %d\n", vboIndices.size(), indexedVertices.size());
+	loadOBJ("Resources/Models/trashcan.wvf", vboIndices, indexedVertices, indexedUvs, indexedNormals);
 
     GLuint trashVertexBuffer;
 	glGenBuffers(1, &trashVertexBuffer);
@@ -152,7 +150,7 @@ int main(int argc, const char * argv[])
     
 	uShortStorage vboIndicesShorts;
     //Skybox
-	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals);
+	loadOBJ("Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals);
     
 	GLuint skyboxVertexBuffer;
 	glGenBuffers(1, &skyboxVertexBuffer);
@@ -275,8 +273,6 @@ int main(int argc, const char * argv[])
         glBindVertexArray(trashCanVAO);
         //DrawElements
         glDrawElements(GL_TRIANGLES, TrashcanIndiciesSize, GL_UNSIGNED_INT, 0);
-        
-		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 
         glfwSwapBuffers(window);
         glfwPollEvents();
