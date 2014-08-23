@@ -13,13 +13,12 @@
 #include "OBJLoader.h"
 
 
-bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool &hasQuads)
+bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool transthorpulate, bool triangulate)
 {
     std::vector<unsigned int> vIndices, uvIndices, normalIndices;
     vec3Storage tmpVerts;
     vec2Storage tmpUvs;
     vec3Storage tmpNorms;
-	int dummyTextureCoordVectorIndex = -1; //this will be -1 until one is created, if one is created.
     
     std::ifstream tmpFile;
     if (!tmpFile.good())
@@ -53,25 +52,23 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
 			std::string triad;
 			triad = lStream.str();
 
-			float indices[3];
+			float componentsOfVector[3];
 
 			int mark = 2;
 			int current = 0;
-			//std::cout << triad << ' '; //COUT
-			for (int i = 2; i < triad.length(); i++){
-				if (triad[i] == ' '){
-					if (mark != i){
-						indices[current] = atof(triad.substr(mark, (i - mark)).c_str());
-						//std::cout << triad.substr(mark, (i - mark)) << ' '; //COUT
-					}
+			for (int i = 2; i < triad.length(); i++)
+			{
+				if (current > 3)
+					break;
+				if (isspace(triad[i]) || i == triad.length() - 1)
+				{
+					componentsOfVector[current] = atof(triad.substr(mark, (i - mark)).c_str());
+					
 					mark = i + 1;
 					current++;
 				}
 			}
-			indices[current] = atof(triad.substr(mark, (triad.length()) - mark).c_str()); //get last element
-			//std::cout << triad.substr(mark, (triad.length()) - mark) << std::endl; //COUT
-
-			tmpVerts.push_back(glm::vec3(indices[0], indices[1], indices[2]));
+			tmpVerts.push_back(glm::vec3(componentsOfVector[0], componentsOfVector[1], componentsOfVector[2]));
         }
         
         else if (word == "vt")
@@ -100,111 +97,156 @@ bool loadOBJ(const char *path, vec3Storage &out_verticies, vec2Storage &out_uvs,
 
 				int mark = 0;
 				int current = 0;
-				//std::cout << triad << ' '; //COUT
-				for (int i = 0; i < triad.length();i++){
-					if (triad[i] == '/'){
-						if (mark != i){
+
+				for (int i = 0; i < triad.length();i++)
+				{
+					if (triad[i] == '/')
+					{
+						if (mark != i)
 							indices[current] = atoi(triad.substr(mark, (i-mark)).c_str());
-							//std::cout << triad.substr(mark, (i - mark)) << ' '; //COUT
-						}
 						mark = i+1;
 						current++;
 					}
 				}
-				indices[current] = atoi(triad.substr(mark, (triad.length())-mark).c_str()); //get last element
-				//std::cout << triad.substr(mark, (triad.length()) - mark) << std::endl; //COUT
+
+				//get last element
+				indices[current] = atoi(triad.substr(mark, (triad.length())-mark).c_str());
 
 				if (indices[0] != -1) fvIndices.push_back(indices[0]);
 				if (indices[1] != -1) fvtIndices.push_back(indices[1]);
 				if (indices[2] != -1) fvnIndices.push_back(indices[2]);
 
-				//std::cout << "Indices: " << indices[0] << ' ' << indices[1] << ' ' << indices[2] << ' ' << std::endl; //COUT
-				
 			}
-			if (abortLine) continue;
-			
 
+			if (abortLine)
+				continue;
+			
 			if ((fvtIndices.size() > 0 && fvtIndices.size() != fvIndices.size()) ||
-				(fvnIndices.size() > 0 && fvnIndices.size() != fvIndices.size()) ){
+				(fvnIndices.size() > 0 && fvnIndices.size() != fvIndices.size()) )
+			{
 				std::cout << "Face with malformed vertices on line " << lineCounter << " in " << path << ": " << line << std::endl;
 				continue;
 			}
 
 			
-			if (fvIndices.size() < 3){
+			if (fvIndices.size() < 3)
+			{
 				std::cout << "Face with less than 3 verticies on line " << lineCounter << " in " << path << ": " << line << std::endl;
 				continue;
 			}
-			else if (fvIndices.size() >  3){ //we have an n-gon
-				std::vector<unsigned int> newfvIndices;
-				std::vector<unsigned int> newfvtIndices;
-				std::vector<unsigned int> newfvnIndices;
-				for (int i = 2; i < fvIndices.size(); i++){
-					newfvIndices.push_back(fvIndices[0]);
-					newfvIndices.push_back(fvIndices[i - 1]);
-					newfvIndices.push_back(fvIndices[i]);
-				}
-				if (fvtIndices.size() > 3) for(int i = 2; i < fvtIndices.size(); i++){
-					newfvtIndices.push_back(fvtIndices[0]);
-					newfvtIndices.push_back(fvtIndices[i - 1]);
-					newfvtIndices.push_back(fvtIndices[i]);
-				}
-				if (fvnIndices.size() > 3)for (int i = 2; i < fvnIndices.size(); i++){
-					newfvnIndices.push_back(fvnIndices[0]);
-					newfvnIndices.push_back(fvnIndices[i - 1]);
-					newfvnIndices.push_back(fvnIndices[i]);
-				}
-				fvIndices = newfvIndices;
-			}
-			if (fvtIndices.size() == 0){ //no texture coords were provided
-				if (dummyTextureCoordVectorIndex == -1){
-					tmpUvs.push_back(glm::vec2(1, 1));
-					dummyTextureCoordVectorIndex = tmpUvs.size(); //remember, all indexes are +1
-				}
-				for (int i = 0; i < fvIndices.size(); i++){
-					fvtIndices.push_back(dummyTextureCoordVectorIndex);
+			
+			if (triangulate)
+			{
+				if (fvIndices.size() > 3) //we have an n-gon
+				{
+					std::vector<unsigned int> newfvIndices;
+					std::vector<unsigned int> newfvtIndices;
+					std::vector<unsigned int> newfvnIndices;
+					for (int i = 2; i < fvIndices.size(); i++)
+					{
+						newfvIndices.push_back(fvIndices[0]);
+						newfvIndices.push_back(fvIndices[i - 1]);
+						newfvIndices.push_back(fvIndices[i]);
+					}
+					if (fvtIndices.size() > 3)
+					{
+						for (int i = 2; i < fvtIndices.size(); i++)
+						{
+							newfvtIndices.push_back(fvtIndices[0]);
+							newfvtIndices.push_back(fvtIndices[i - 1]);
+							newfvtIndices.push_back(fvtIndices[i]);
+						}
+					}
+					if (fvnIndices.size() > 3)
+					{
+						for (int i = 2; i < fvnIndices.size(); i++)
+						{
+							newfvnIndices.push_back(fvnIndices[0]);
+							newfvnIndices.push_back(fvnIndices[i - 1]);
+							newfvnIndices.push_back(fvnIndices[i]);
+						}
+					}
+
+					fvIndices = newfvIndices;
+					fvtIndices = newfvtIndices;
+					fvnIndices = newfvnIndices;
 				}
 			}
 
-			if (fvnIndices.size() == 0){ //no normals were provided
-				glm::vec3 calculatedFaceNormal =
-					glm::cross(tmpVerts[fvIndices[1] - 1] - tmpVerts[fvIndices[0] - 1],
-					tmpVerts[fvIndices[2] - 1] - tmpVerts[fvIndices[0] - 1]);
-				tmpNorms.push_back(calculatedFaceNormal);
-				int index = tmpNorms.size();
-				for (int i = 0; i < fvIndices.size(); i++){
-					fvnIndices.push_back(index);
+			if (transthorpulate)
+			{
+				//no texture coords were provided
+				if (fvtIndices.size() == 0)
+				{
+					for (int i = 0; i < fvIndices.size(); i++)
+					{
+						tmpUvs.push_back(glm::vec2(1, 1));
+						int dummyTextureCoordVectorIndex = tmpUvs.size(); //remember, all indexes are +1
+						fvtIndices.push_back(dummyTextureCoordVectorIndex);
+					}
+				}
+
+				//no normals were provided
+				if (fvnIndices.size() == 0)
+				{
+					glm::vec3 calculatedFaceNormal =
+						glm::cross(tmpVerts[fvIndices[1] - 1] - tmpVerts[fvIndices[0] - 1],
+						tmpVerts[fvIndices[2] - 1] - tmpVerts[fvIndices[0] - 1]);
+					for (int i = 0; i < fvIndices.size(); i++)
+					{
+						tmpNorms.push_back(calculatedFaceNormal);
+						int index = tmpNorms.size();
+						fvnIndices.push_back(index);
+					}
 				}
 			}
+
 			//push face verts to model
-			for (unsigned int i = 0; i < fvIndices.size(); i++){
+			for (unsigned int i = 0; i < fvIndices.size(); i++)
 				vIndices.push_back(fvIndices[i]);
-			}
-			for (unsigned int i = 0; i < fvtIndices.size(); i++){
+
+			for (unsigned int i = 0; i < fvtIndices.size(); i++)
 				uvIndices.push_back(fvtIndices[i]);
-			}
-			for (unsigned int i = 0; i < fvnIndices.size(); i++){
+
+			for (unsigned int i = 0; i < fvnIndices.size(); i++)
 				normalIndices.push_back(fvnIndices[i]);
-			}
-
         }
-
 		else
 		{
 			std::cout << "Unsupported wavefront command on line " << lineCounter << " in " << path << ": " << line << std::endl;
-		}
-        
+		}     
     }
     if (vIndices.size() >= 65535)
         printf("WARNING: This mesh is over UINT16 in size, rendering issues may arrise if you use VBOIndexing! This warning isn't checking to see if VBOIndexing is used. However if this warning ever fires please contact Jared immediately, as it is likely an appropriate time to fix the weakness in the engine.\n");
-	for (unsigned int i = 0; i < vIndices.size(); i++){
+	
+	/*for (unsigned int i = 0; i < vIndices.size(); i++)
 		out_verticies.push_back(tmpVerts[vIndices[i] - 1]);
-	}
-	for (unsigned int i = 0; i < uvIndices.size(); i++){
+
+	for (unsigned int i = 0; i < uvIndices.size(); i++)
 		out_uvs.push_back(tmpUvs[uvIndices[i] - 1]);
-	}
-	for (unsigned int i = 0; i < normalIndices.size(); i++){
+	
+	for (unsigned int i = 0; i < normalIndices.size(); i++)
+		out_normals.push_back(tmpNorms[normalIndices[i] - 1]);*/
+
+	for (unsigned int i = 0; i < vIndices.size(); i++)
+	{
+		out_indices.push_back(i);
+		out_verticies.push_back(tmpVerts[vIndices[i] - 1]);
+		out_uvs.push_back(tmpUvs[uvIndices[i] - 1]);
 		out_normals.push_back(tmpNorms[normalIndices[i] - 1]);
-    }
+	}
+
     return true;
+}
+
+bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool transthorpulate, bool triangulate)
+{
+	uIntStorage vboIndices;
+
+	bool out = loadOBJ(path, vboIndices, out_verticies, out_uvs, out_normals,transthorpulate, triangulate);
+
+	for (unsigned int i : vboIndices)
+		out_indices.push_back((unsigned short)i);
+
+	return out;
 }

@@ -19,6 +19,7 @@
     typedef std::vector <glm::vec2> vec2Storage;
     typedef std::vector <unsigned short> uShortStorage;
 
+
     struct PackedVertex
     {
         glm::vec3 position;

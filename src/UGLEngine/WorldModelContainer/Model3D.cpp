@@ -13,7 +13,7 @@
 
 Model3D::Model3D(std::string path, bool vboIndexing)
 {
-    if(sWMC.MeshInMemory(path))
+    /*if(sWMC.MeshInMemory(path))
     {
         ObjectRawHolder *tmpObject;
         tmpObject = sWMC.GetMeshInMemory(path);
@@ -80,12 +80,7 @@ Model3D::Model3D(std::string path, bool vboIndexing)
         _quadBased = hasQuads;
         _path = path;
         sWMC.AddMeshToMemory(path, tmpObject);
-    }
-
-    
-
-    
-    
+    }*/
 
 }
 
