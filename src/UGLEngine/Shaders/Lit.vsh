@@ -3,6 +3,8 @@
 layout(location=0) in vec3 vertexPosition_modelspace;
 layout(location=1) in vec2 vertexUV;
 layout(location=2) in vec3 vertexNormal_modelspace;
+layout(location=3) in vec3 vertexTangent_modelspace;
+layout(location=4) in vec3 vertexBitangent_modelspace;
 //layout(location=1) in vec3 vertexColor;
 
 //Constant Values for each runthrough of the shader.
@@ -14,6 +16,8 @@ uniform vec3 LightPosition_worldspace;
 //Outputted data that will be interpolated for each fragment.
 out vec3 Position_worldspace;
 out vec3 Normal_cameraspace;
+out vec3 Tangent_cameraspace;
+out vec3 Bitangent_cameraspace;
 out vec3 EyeDirection_cameraspace;
 out vec3 LightDirection_cameraspace;
 out vec2 UV;
@@ -31,8 +35,8 @@ void main()
     LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
     
     Normal_cameraspace = (V * M * vec4(vertexNormal_modelspace, 0)).xyz;
-    
-    
+	Tangent_cameraspace = (V * M * vec4(vertexTangent_modelspace, 0)).xyz;
+	Bitangent_cameraspace = (V * M * vec4(vertexBitangent_modelspace, 0)).xyz;
     
     UV = vertexUV;
 }

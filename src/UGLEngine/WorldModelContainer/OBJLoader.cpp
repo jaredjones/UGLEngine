@@ -13,12 +13,14 @@
 #include "OBJLoader.h"
 
 
-bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool transthorpulate, bool triangulate)
+bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
 {
-    std::vector<unsigned int> vIndices, uvIndices, normalIndices;
+    std::vector<unsigned int> vIndices, uvIndices, normalIndices, tangentIndices, bitangentIndices;
     vec3Storage tmpVerts;
     vec2Storage tmpUvs;
     vec3Storage tmpNorms;
+	vec3Storage tmpTangs;
+	vec3Storage tmpBitangs;
     
     std::ifstream tmpFile;
     if (!tmpFile.good())
@@ -210,6 +212,38 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
 
 			for (unsigned int i = 0; i < fvnIndices.size(); i++)
 				normalIndices.push_back(fvnIndices[i]);
+
+			//generate tangents and bitangents
+			for (unsigned int i = 0; i < fvIndices.size(); i += 3){
+				// Shortcuts for vertices
+				glm::vec3 & v0 = tmpVerts[fvIndices[i] - 1];
+				glm::vec3 & v1 = tmpVerts[fvIndices[i+1] - 1];
+				glm::vec3 & v2 = tmpVerts[fvIndices[i+2] - 1];
+
+				// Shortcuts for UVs
+				glm::vec2 & uv0 = tmpUvs[fvtIndices[i] - 1];
+				glm::vec2 & uv1 = tmpUvs[fvtIndices[i+1] - 1];
+				glm::vec2 & uv2 = tmpUvs[fvtIndices[i+2] - 1];
+
+				// Edges of the triangle : postion delta
+				glm::vec3 deltaPos1 = v1 - v0;
+				glm::vec3 deltaPos2 = v2 - v0;
+
+				// UV delta
+				glm::vec2 deltaUV1 = uv1 - uv0;
+				glm::vec2 deltaUV2 = uv2 - uv0;
+
+				float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+				glm::vec3 tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*r;
+				glm::vec3 bitangent = (deltaPos2 * deltaUV1.x - deltaPos1 * deltaUV2.x)*r;
+
+				for (int i = 0; i < 3; i++){
+					tangentIndices.push_back(i + 1);
+					tmpTangs.push_back(tangent);
+					bitangentIndices.push_back(i + 1);
+					tmpBitangs.push_back(bitangent);
+				}
+			}
         }
 		else
 		{
@@ -234,16 +268,18 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
 		out_verticies.push_back(tmpVerts[vIndices[i] - 1]);
 		out_uvs.push_back(tmpUvs[uvIndices[i] - 1]);
 		out_normals.push_back(tmpNorms[normalIndices[i] - 1]);
+		out_tangents.push_back(tmpTangs[bitangentIndices[i] - 1]);
+		out_bitangents.push_back(tmpBitangs[bitangentIndices[i] - 1]);
 	}
 
     return true;
 }
 
-bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, bool transthorpulate, bool triangulate)
+bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
 {
 	uIntStorage vboIndices;
 
-	bool out = loadOBJ(path, vboIndices, out_verticies, out_uvs, out_normals,transthorpulate, triangulate);
+	bool out = loadOBJ(path, vboIndices, out_verticies, out_uvs, out_normals, out_tangents, out_bitangents,transthorpulate, triangulate);
 
 	for (unsigned int i : vboIndices)
 		out_indices.push_back((unsigned short)i);

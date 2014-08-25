@@ -71,10 +71,11 @@ int main(int argc, const char * argv[])
     sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
     
     GLuint programID = sWMC.GetShader("lit");
-    //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
+    //Model3D *myTest = new Model3D("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/trashcan.wvf", false);
     
-    //GLuint TrashcanTexture = loadDDS("Resources/Images/uvmap.DDS");
-    GLuint TrashcanTexture = loadBMP_custom("Resources/Images/trashcan.bmp");
+    //GLuint TrashcanTexture = loadDDS("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/uvmap.DDS");
+    GLuint TrashcanTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan.bmp");
+	GLuint TrashcanNormalTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan_normal.bmp");
     
     //Create a handle for the uniforms
     GLuint Lit_MVPID = glGetUniformLocation(programID, "MVP");
@@ -82,10 +83,11 @@ int main(int argc, const char * argv[])
     GLuint Lit_ModelMatrixID = glGetUniformLocation(programID, "M");
     GLuint Lit_LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
     GLuint Lit_TextureID  = glGetUniformLocation(programID, "myTextureSampler");
+	GLuint Lit_NormalTextureID = glGetUniformLocation(programID, "myNormalTextureSampler");
     
     programID = sWMC.GetShader("skybox");
-    GLuint SkyboxTexture = loadBMP_custom("Resources/Images/JaredSkybox.bmp");
-    //GLuint SkyboxTexture = loadDDS("Resources/Images/skybox.dds");
+    GLuint SkyboxTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/JaredSkybox.bmp");
+    //GLuint SkyboxTexture = loadDDS("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/skybox.dds");
     
     //Create a handle for the uniforms
     GLuint Skybox_MVPID = glGetUniformLocation(programID, "MVP");
@@ -96,8 +98,10 @@ int main(int argc, const char * argv[])
     vec3Storage indexedVertices;
     vec2Storage indexedUvs;
     vec3Storage indexedNormals;
+	vec3Storage indexedTangents;
+	vec3Storage indexedBitangents;
     
-	loadOBJ("Resources/Models/trashcan.wvf", vboIndices, indexedVertices, indexedUvs, indexedNormals);
+	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/trashcan.wvf", vboIndices, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
 
     GLuint trashVertexBuffer;
 	glGenBuffers(1, &trashVertexBuffer);
@@ -113,6 +117,16 @@ int main(int argc, const char * argv[])
 	glGenBuffers(1, &trashNormalBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, trashNormalBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
+
+	GLuint trashTangentBuffer;
+	glGenBuffers(1, &trashTangentBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
+	glBufferData(GL_ARRAY_BUFFER, indexedTangents.size() * sizeof(glm::vec3), &indexedTangents[0], GL_STATIC_DRAW);
+
+	GLuint trashBitangentBuffer;
+	glGenBuffers(1, &trashBitangentBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
+	glBufferData(GL_ARRAY_BUFFER, indexedBitangents.size() * sizeof(glm::vec3), &indexedBitangents[0], GL_STATIC_DRAW);
     
     GLuint trashIndexBuffer;
 	glGenBuffers(1, &trashIndexBuffer);
@@ -138,6 +152,14 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, trashNormalBuffer);
     glEnableVertexAttribArray(2);//Open up this Attribute Array
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
+	glEnableVertexAttribArray(3);//Open up this Attribute Array
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
+	glEnableVertexAttribArray(4);//Open up this Attribute Array
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trashIndexBuffer);
     
@@ -146,11 +168,13 @@ int main(int argc, const char * argv[])
     vboIndices.clear();
     indexedVertices.clear();
     indexedNormals.clear();
+	indexedTangents.clear();
+	indexedBitangents.clear();
     indexedUvs.clear();
     
 	uShortStorage vboIndicesShorts;
     //Skybox
-	loadOBJ("Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals);
+	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
     
 	GLuint skyboxVertexBuffer;
 	glGenBuffers(1, &skyboxVertexBuffer);
@@ -265,8 +289,12 @@ int main(int argc, const char * argv[])
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TrashcanTexture);
+		// Bind our texture in Texture Unit 1
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, TrashcanNormalTexture);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(Lit_TextureID, 0);
+		glUniform1i(Lit_NormalTextureID, 1);
      
         
         //BindVAO
@@ -274,14 +302,20 @@ int main(int argc, const char * argv[])
         //DrawElements
         glDrawElements(GL_TRIANGLES, TrashcanIndiciesSize, GL_UNSIGNED_INT, 0);
 
+		
+
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     
     
 	glDeleteBuffers(1, &trashVertexBuffer);
 	glDeleteBuffers(1, &trashUvBuffer);
 	glDeleteBuffers(1, &trashNormalBuffer);
+	glDeleteBuffers(1, &trashTangentBuffer);
+	glDeleteBuffers(1, &trashBitangentBuffer);
 	glDeleteBuffers(1, &trashIndexBuffer);
     glDeleteBuffers(1, &skyboxVertexBuffer);
     glDeleteBuffers(1, &skyboxUvBuffer);
