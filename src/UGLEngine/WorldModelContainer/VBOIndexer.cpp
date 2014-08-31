@@ -30,26 +30,26 @@ bool getSimilarVertexIndex(
                            vec3Storage &outNormals,
                            unsigned short & result
                            ){
-	// Lame linear search
-	for ( unsigned int i=0; i < outVertices.size(); i++ )
+    // Lame linear search
+    for ( unsigned int i=0; i < outVertices.size(); i++ )
     {
-		if (
-			isNear( vertex.x , outVertices[i].x ) &&
-			isNear( vertex.y , outVertices[i].y ) &&
-			isNear( vertex.z , outVertices[i].z ) &&
-			isNear( uv.x     , outUvs     [i].x ) &&
-			isNear( uv.y     , outUvs     [i].y ) &&
-			isNear( normal.x , outNormals [i].x ) &&
-			isNear( normal.y , outNormals [i].y ) &&
-			isNear( normal.z , outNormals [i].z )
+        if (
+            isNear( vertex.x , outVertices[i].x ) &&
+            isNear( vertex.y , outVertices[i].y ) &&
+            isNear( vertex.z , outVertices[i].z ) &&
+            isNear( uv.x     , outUvs     [i].x ) &&
+            isNear( uv.y     , outUvs     [i].y ) &&
+            isNear( normal.x , outNormals [i].x ) &&
+            isNear( normal.y , outNormals [i].y ) &&
+            isNear( normal.z , outNormals [i].z )
             ){
-			result = i;
-			return true;
-		}
-	}
-	// No other vertex could be used instead.
-	// Looks like we'll have to add it to the VBO.
-	return false;
+            result = i;
+            return true;
+        }
+    }
+    // No other vertex could be used instead.
+    // Looks like we'll have to add it to the VBO.
+    return false;
 }
 
 bool getSimilarVertexIndexFast(PackedVertex &pVertex, std::map<PackedVertex, unsigned short> &vToOutIndex, unsigned short &result)
@@ -68,23 +68,23 @@ bool getSimilarVertexIndexFast(PackedVertex &pVertex, std::map<PackedVertex, uns
 void indexVBO_slow(vec3Storage &vertices, vec2Storage &uvs, vec3Storage &normals,
                    uShortStorage &outIndices, vec3Storage &outVertices, vec2Storage &outUvs, vec3Storage &outNormals)
 {
-	// For each input vertex
-	for (unsigned int i=0; i < vertices.size(); i++)
+    // For each input vertex
+    for (unsigned int i=0; i < vertices.size(); i++)
     {
-		// Try to find a similar vertex in out_XXXX
-		unsigned short index;
-		bool found = getSimilarVertexIndex(vertices[i], uvs[i], normals[i], outVertices, outUvs, outNormals, index);
+        // Try to find a similar vertex in out_XXXX
+        unsigned short index;
+        bool found = getSimilarVertexIndex(vertices[i], uvs[i], normals[i], outVertices, outUvs, outNormals, index);
         
-		if ( found ) // A similar vertex is already in the VBO, use it instead !
-			outIndices.push_back(index);
-		else
+        if ( found ) // A similar vertex is already in the VBO, use it instead !
+            outIndices.push_back(index);
+        else
         { // If not, it needs to be added in the output data.
-			outVertices.push_back( vertices[i]);
-			outUvs     .push_back( uvs[i]);
-			outNormals .push_back( normals[i]);
-			outIndices .push_back( (unsigned short)outVertices.size() - 1 );
-		}
-	}
+            outVertices.push_back( vertices[i]);
+            outUvs     .push_back( uvs[i]);
+            outNormals .push_back( normals[i]);
+            outIndices .push_back( (unsigned short)outVertices.size() - 1 );
+        }
+    }
 }
 
 void indexVBO(vec3Storage &vertices, vec2Storage &uvs, vec3Storage &normals,

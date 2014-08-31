@@ -101,12 +101,12 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     std::vector<char> ProgramErrorMessage( std::max(InfoLogLength, int(1)) );
     glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-        fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
+    fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
     
     if (InfoLogLength != 0)
         //error = true;
-    
-    glDeleteShader(VertexShaderID);
+        
+        glDeleteShader(VertexShaderID);
     glDeleteShader(FragmentShaderID);
     
     return ProgramID;

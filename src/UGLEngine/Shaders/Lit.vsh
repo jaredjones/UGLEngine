@@ -35,8 +35,8 @@ void main()
     LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
     
     Normal_cameraspace = (V * M * vec4(vertexNormal_modelspace, 0)).xyz;
-	Tangent_cameraspace = (V * M * vec4(vertexTangent_modelspace, 0)).xyz;
-	Bitangent_cameraspace = (V * M * vec4(vertexBitangent_modelspace, 0)).xyz;
+    Tangent_cameraspace = (V * M * vec4(vertexTangent_modelspace, 0)).xyz;
+    Bitangent_cameraspace = (V * M * vec4(vertexBitangent_modelspace, 0)).xyz;
     
     UV = vertexUV;
 }

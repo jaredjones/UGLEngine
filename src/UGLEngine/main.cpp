@@ -56,12 +56,12 @@ int main(int argc, const char * argv[])
     
     glewExperimental = GL_TRUE;
     glewInit();
-
+    
     std::cout << glGetString(GL_VENDOR) << std::endl;
     std::cout << glGetString(GL_VERSION) << std::endl;
     std::cout << glGetString(GL_RENDERER) << std::endl;
     
-    /*The version is formatted as <version number><space><vendor-specific information>, 
+    /*The version is formatted as <version number><space><vendor-specific information>,
      where <version number> is a MAJOR.MINOR format, with an optional release number.
      */
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
@@ -75,7 +75,7 @@ int main(int argc, const char * argv[])
     
     //GLuint TrashcanTexture = loadDDS("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/uvmap.DDS");
     GLuint TrashcanTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan.bmp");
-	GLuint TrashcanNormalTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan_normal.bmp");
+    GLuint TrashcanNormalTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/trashcan_normal.bmp");
     
     //Create a handle for the uniforms
     GLuint Lit_MVPID = glGetUniformLocation(programID, "MVP");
@@ -83,7 +83,7 @@ int main(int argc, const char * argv[])
     GLuint Lit_ModelMatrixID = glGetUniformLocation(programID, "M");
     GLuint Lit_LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
     GLuint Lit_TextureID  = glGetUniformLocation(programID, "myTextureSampler");
-	GLuint Lit_NormalTextureID = glGetUniformLocation(programID, "myNormalTextureSampler");
+    GLuint Lit_NormalTextureID = glGetUniformLocation(programID, "myNormalTextureSampler");
     
     programID = sWMC.GetShader("skybox");
     GLuint SkyboxTexture = loadBMP_custom("J:/c++/UGLEngine/build/bin/Debug/Resources/Images/JaredSkybox.bmp");
@@ -94,43 +94,43 @@ int main(int argc, const char * argv[])
     GLuint Skybox_TextureID = glGetUniformLocation(programID, "myTextureSampler");
     
     //OBJ BEGIN TEST
-	uIntStorage vboIndices;
+    uIntStorage vboIndices;
     vec3Storage indexedVertices;
     vec2Storage indexedUvs;
     vec3Storage indexedNormals;
-	vec3Storage indexedTangents;
-	vec3Storage indexedBitangents;
+    vec3Storage indexedTangents;
+    vec3Storage indexedBitangents;
     
-	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/trashcan.wvf", vboIndices, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
-
+    loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/trashcan.wvf", vboIndices, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
+    
     GLuint trashVertexBuffer;
-	glGenBuffers(1, &trashVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, trashVertexBuffer);
+    glGenBuffers(1, &trashVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, trashVertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
     
     GLuint trashUvBuffer;
-	glGenBuffers(1, &trashUvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, trashUvBuffer);
+    glGenBuffers(1, &trashUvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, trashUvBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedUvs.size() * sizeof(glm::vec2), &indexedUvs[0], GL_STATIC_DRAW);
     
     GLuint trashNormalBuffer;
-	glGenBuffers(1, &trashNormalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, trashNormalBuffer);
+    glGenBuffers(1, &trashNormalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, trashNormalBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
-
-	GLuint trashTangentBuffer;
-	glGenBuffers(1, &trashTangentBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedTangents.size() * sizeof(glm::vec3), &indexedTangents[0], GL_STATIC_DRAW);
-
-	GLuint trashBitangentBuffer;
-	glGenBuffers(1, &trashBitangentBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
-	glBufferData(GL_ARRAY_BUFFER, indexedBitangents.size() * sizeof(glm::vec3), &indexedBitangents[0], GL_STATIC_DRAW);
+    
+    GLuint trashTangentBuffer;
+    glGenBuffers(1, &trashTangentBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
+    glBufferData(GL_ARRAY_BUFFER, indexedTangents.size() * sizeof(glm::vec3), &indexedTangents[0], GL_STATIC_DRAW);
+    
+    GLuint trashBitangentBuffer;
+    glGenBuffers(1, &trashBitangentBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
+    glBufferData(GL_ARRAY_BUFFER, indexedBitangents.size() * sizeof(glm::vec3), &indexedBitangents[0], GL_STATIC_DRAW);
     
     GLuint trashIndexBuffer;
-	glGenBuffers(1, &trashIndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trashIndexBuffer);
+    glGenBuffers(1, &trashIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trashIndexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, vboIndices.size() * sizeof(unsigned int), &vboIndices[0], GL_STATIC_DRAW);
     
     GLsizei TrashcanIndiciesSize = (GLsizei)vboIndices.size();
@@ -144,7 +144,7 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, trashVertexBuffer);
     glEnableVertexAttribArray(0);//Open up this Attribute Array
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
-
+    
     glBindBuffer(GL_ARRAY_BUFFER, trashUvBuffer);
     glEnableVertexAttribArray(1);//Open up this Attribute Array
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
@@ -152,14 +152,14 @@ int main(int argc, const char * argv[])
     glBindBuffer(GL_ARRAY_BUFFER, trashNormalBuffer);
     glEnableVertexAttribArray(2);//Open up this Attribute Array
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
-	glEnableVertexAttribArray(3);//Open up this Attribute Array
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
-	glEnableVertexAttribArray(4);//Open up this Attribute Array
-	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, trashTangentBuffer);
+    glEnableVertexAttribArray(3);//Open up this Attribute Array
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, trashBitangentBuffer);
+    glEnableVertexAttribArray(4);//Open up this Attribute Array
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trashIndexBuffer);
     
@@ -168,54 +168,54 @@ int main(int argc, const char * argv[])
     vboIndices.clear();
     indexedVertices.clear();
     indexedNormals.clear();
-	indexedTangents.clear();
-	indexedBitangents.clear();
+    indexedTangents.clear();
+    indexedBitangents.clear();
     indexedUvs.clear();
     
-	uShortStorage vboIndicesShorts;
+    uShortStorage vboIndicesShorts;
     //Skybox
-	loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
+    loadOBJ("J:/c++/UGLEngine/build/bin/Debug/Resources/Models/JaredSkybox.wvf", vboIndicesShorts, indexedVertices, indexedUvs, indexedNormals, indexedTangents, indexedBitangents);
     
-	GLuint skyboxVertexBuffer;
-	glGenBuffers(1, &skyboxVertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVertexBuffer);
+    GLuint skyboxVertexBuffer;
+    glGenBuffers(1, &skyboxVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVertexBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedVertices.size() * sizeof(glm::vec3), &indexedVertices[0], GL_STATIC_DRAW);
-
-	GLuint skyboxUvBuffer;
-	glGenBuffers(1, &skyboxUvBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxUvBuffer);
+    
+    GLuint skyboxUvBuffer;
+    glGenBuffers(1, &skyboxUvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxUvBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedUvs.size() * sizeof(glm::vec2), &indexedUvs[0], GL_STATIC_DRAW);
     
-	GLuint skyboxNormalBuffer;
-	glGenBuffers(1, &skyboxNormalBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxNormalBuffer);
+    GLuint skyboxNormalBuffer;
+    glGenBuffers(1, &skyboxNormalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxNormalBuffer);
     glBufferData(GL_ARRAY_BUFFER, indexedNormals.size() * sizeof(glm::vec3), &indexedNormals[0], GL_STATIC_DRAW);
-
-	GLuint skyboxIndexBuffer;
-	glGenBuffers(1, &skyboxIndexBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxIndexBuffer);
+    
+    GLuint skyboxIndexBuffer;
+    glGenBuffers(1, &skyboxIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxIndexBuffer);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, vboIndicesShorts.size() * sizeof(unsigned short), &vboIndicesShorts[0], GL_STATIC_DRAW);
     
-	GLsizei SkyboxIndiciesSize = (GLsizei)vboIndicesShorts.size();
+    GLsizei SkyboxIndiciesSize = (GLsizei)vboIndicesShorts.size();
     
     //Building VAO
     GLuint SkyboxVAO;
     glGenVertexArrays(1, &SkyboxVAO);
     glBindVertexArray(SkyboxVAO);
     
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxVertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxVertexBuffer);
     glEnableVertexAttribArray(0);//Open up this Attribute Array
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
     
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxUvBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxUvBuffer);
     glEnableVertexAttribArray(1);//Open up this Attribute Array
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
     
-	glBindBuffer(GL_ARRAY_BUFFER, skyboxNormalBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, skyboxNormalBuffer);
     glEnableVertexAttribArray(2);//Open up this Attribute Array
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
     
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxIndexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, skyboxIndexBuffer);
     
     glBindVertexArray(0);//Nulls out bound vertex array
     
@@ -233,7 +233,9 @@ int main(int argc, const char * argv[])
     {
         double currentTime = glfwGetTime();
         nbFrames++;
-        if ( currentTime - lastTime >= 1.0 ){ // If last prinf() was more than 1 sec ago
+        // If last prinf() was more than 1 sec ago
+        if ( currentTime - lastTime >= 1.0 )
+        {
             // printf and reset timer
             printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
             nbFrames = 0;
@@ -252,7 +254,8 @@ int main(int argc, const char * argv[])
         
         glUseProgram(sWMC.GetShader("skybox"));
         glm::mat4 ModelSkybox = glm::mat4(1.0f);
-        glm::mat4 MVPSkybox = getProjectionMatrix() * getViewMatrixWithoutTranslation() * ModelSkybox; //Don't use ViewMatrix for Skybox
+        // Don't use ViewMatrix for Skybox
+        glm::mat4 MVPSkybox = getProjectionMatrix() * getViewMatrixWithoutTranslation() * ModelSkybox;
         
         glUniformMatrix4fv(Skybox_MVPID, 1, GL_FALSE, &MVPSkybox[0][0]);
         
@@ -289,34 +292,31 @@ int main(int argc, const char * argv[])
         // Bind our texture in Texture Unit 0
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TrashcanTexture);
-		// Bind our texture in Texture Unit 1
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, TrashcanNormalTexture);
+        // Bind our texture in Texture Unit 1
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, TrashcanNormalTexture);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
         glUniform1i(Lit_TextureID, 0);
-		glUniform1i(Lit_NormalTextureID, 1);
-     
+        glUniform1i(Lit_NormalTextureID, 1);
         
         //BindVAO
         glBindVertexArray(trashCanVAO);
         //DrawElements
         glDrawElements(GL_TRIANGLES, TrashcanIndiciesSize, GL_UNSIGNED_INT, 0);
-
-		
-
+        
         glfwSwapBuffers(window);
         glfwPollEvents();
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(16));
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     
     
-	glDeleteBuffers(1, &trashVertexBuffer);
-	glDeleteBuffers(1, &trashUvBuffer);
-	glDeleteBuffers(1, &trashNormalBuffer);
-	glDeleteBuffers(1, &trashTangentBuffer);
-	glDeleteBuffers(1, &trashBitangentBuffer);
-	glDeleteBuffers(1, &trashIndexBuffer);
+    glDeleteBuffers(1, &trashVertexBuffer);
+    glDeleteBuffers(1, &trashUvBuffer);
+    glDeleteBuffers(1, &trashNormalBuffer);
+    glDeleteBuffers(1, &trashTangentBuffer);
+    glDeleteBuffers(1, &trashBitangentBuffer);
+    glDeleteBuffers(1, &trashIndexBuffer);
     glDeleteBuffers(1, &skyboxVertexBuffer);
     glDeleteBuffers(1, &skyboxUvBuffer);
     glDeleteBuffers(1, &skyboxNormalBuffer);
@@ -324,7 +324,6 @@ int main(int argc, const char * argv[])
     glDeleteTextures(1, &TrashcanTexture);
     glDeleteVertexArrays(1, &trashCanVAO);
     glDeleteProgram(programID);
-    
     
     glfwTerminate();
     return 0;
