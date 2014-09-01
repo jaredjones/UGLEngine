@@ -103,6 +103,10 @@
 #endif
 #endif
 
+#ifdef __APPLE__
+#   include <CoreFoundation/CoreFoundation.h>
+#   include <Foundation/Foundation.h>
+#endif
 
 #if PLATFORM == PLATFORM_WINDOWS
 #  include <ws2tcpip.h>
@@ -171,9 +175,9 @@
 #define _UNISTD_H    1
 
 /* This file intended to serve as a drop-in replacement for
-*  unistd.h on Windows
-*  Please add functionality as neeeded
-*/
+ *  unistd.h on Windows
+ *  Please add functionality as neeeded
+ */
 
 #include <stdlib.h>
 #include <io.h>
@@ -185,7 +189,7 @@
 #define random rand
 
 /* Values for the second argument to access.
-These may be OR'd together.  */
+ These may be OR'd together.  */
 #define R_OK    4       /* Test for read permission.  */
 #define W_OK    2       /* Test for write permission.  */
 //#define   X_OK    1       /* execute permission - unsupported in windows*/
@@ -227,13 +231,13 @@ typedef unsigned __int64  uint64_t;
 
 enum TimeConstants
 {
-	MINUTE = 60,
-	HOUR = MINUTE * 60,
-	DAY = HOUR * 24,
-	WEEK = DAY * 7,
-	MONTH = DAY * 30,
-	YEAR = MONTH * 12,
-	IN_MILLISECONDS = 1000
+    MINUTE = 60,
+    HOUR = MINUTE * 60,
+    DAY = HOUR * 24,
+    WEEK = DAY * 7,
+    MONTH = DAY * 30,
+    YEAR = MONTH * 12,
+    IN_MILLISECONDS = 1000
 };
 
 typedef uint8_t uint8;
@@ -248,18 +252,18 @@ typedef int64_t int64;
 const int UNIXSTARTYEAR = 1900;
 
 #ifndef M_PI
-#define M_PI    3.14159265358979323846f
+#define M_PI            3.14159265358979323846f
 #endif
 
 #ifndef M_PI_2
-#define M_PI_2     1.57079632679489661923f
+#define M_PI_2          1.57079632679489661923f
 #endif
 
 #ifndef M_PI_4
-#define M_PI_4     0.785398163397448309616f
+#define M_PI_4          0.785398163397448309616f
 #endif
 
-#define MAX_QUERY_LEN 32*1024
+#define MAX_QUERY_LEN   32*1024
 
 
 #endif

@@ -67,7 +67,9 @@ target_link_libraries(uglengine glfw
   ${GLFW_LIBRARIES}
 )
 
-
+if( APPLE )
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+endif()
 
 if( UNIX )
 	install(TARGETS uglengine DESTINATION bin)

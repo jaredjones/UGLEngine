@@ -24,9 +24,27 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
+void pathSetup()
+{
+#ifdef __APPLE__
+    // This makes relative paths work in C++ in Xcode by changing directory to the Resources folder inside the .app bundle
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+    char path[PATH_MAX];
+    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
+    {
+        // error!
+    }
+    CFRelease(resourcesURL);
+    
+    chdir(path);
+    printf("Current Path:%s\n", path);
+#endif
+}
 
 int main(int argc, const char * argv[])
 {
+    pathSetup();
     GLFWwindow *window;
     
     if (!glfwInit())
