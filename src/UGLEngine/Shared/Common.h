@@ -29,7 +29,7 @@
 #include <thread>
 #include <mutex>
 
-#define CURRENT_WORKING_DIRECTORY "J:/c++/UGLEngine/build/bin/Debug/"
+#define CURRENT_WORKING_DIRECTORY "/Users/jared/Documents/UGLEngine/"
 
 #define GLM_FORCE_RADIANS
 #include <glm.hpp>

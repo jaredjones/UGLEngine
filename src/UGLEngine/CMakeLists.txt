@@ -4,6 +4,7 @@ endif()
 
 file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging/*.h)
 file(GLOB_RECURSE sources_Shared Shared/*.cpp Shared/*.h)
+file(GLOB_RECURSE sources_Structures Structures/*.cpp Structures/*.h)
 file(GLOB_RECURSE sources_WorldModelContainer WorldModelContainer/*.cpp WorldModelContainer/*.h)
 
 file(GLOB sources_localdir *.cpp *.h)
@@ -17,6 +18,7 @@ set(uglengine_SRCS
   ${uglengine_SRCS}
   ${sources_Logging}
   ${sources_Shared}
+  ${sources_Structures}
   ${sources_WorldModelContainer}
   ${sources_localdir}
 )
@@ -37,8 +39,9 @@ endif()
 include_directories(
   	${CMAKE_BINARY_DIR}
 	${CMAKE_SOURCE_DIR}/src/UGLEngine/Logging
-	${CMAKE_SOURCE_DIR}/src/UGLEngine/WorldModelContainer
+	${CMAKE_SOURCE_DIR}/src/UGLEngine/Structures
 	${CMAKE_SOURCE_DIR}/src/UGLEngine/Shared
+	${CMAKE_SOURCE_DIR}/src/UGLEngine/WorldModelContainer
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${GLM_INCLUDE_DIR}
 	${CMAKE_SOURCE_DIR}/dep/glfw/include

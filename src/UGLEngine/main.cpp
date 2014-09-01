@@ -295,7 +295,7 @@ int main(int argc, const char * argv[])
         
         glUseProgram(sWMC.GetShader("lit"));
         
-        rotDeg += 0.01;
+        rotDeg++;
         glm::mat4 ModelCube = glm::mat4(1.0f);
         ModelCube = glm::rotate(ModelCube, glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
         glm::mat4 MVPCube = getProjectionMatrix() * getViewMatrix() * ModelCube;
@@ -306,7 +306,7 @@ int main(int argc, const char * argv[])
         glUniformMatrix4fv(Lit_ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
         
         glm::vec3 lightPos = glm::vec3(4*cos(lightZ),4,4*sin(lightZ));
-        lightZ +=.0003f;
+        lightZ +=.03f;
         
         glUniform3f(Lit_LightID, lightPos.x, lightPos.y, lightPos.z);
         
