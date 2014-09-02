@@ -18,4 +18,6 @@ glm::mat4 getViewMatrix();
 glm::mat4 getProjectionMatrix();
 glm::mat4 getViewMatrixWithoutTranslation();
 
+glm::vec3 getCameraPosition();
+
 #endif /* defined(__UGLEngine__CameraController__) */

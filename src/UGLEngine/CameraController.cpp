@@ -34,6 +34,7 @@ float mouseSpeed = 0.005f;
 double lastXPos;
 double lastYPos;
 
+glm::vec3 getCameraPosition(){ return position; };
 
 void computeMatricesFromInputs(GLFWwindow* window)
 {

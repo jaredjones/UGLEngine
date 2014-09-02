@@ -13,7 +13,7 @@
 #include "OBJLoader.h"
 
 
-bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
+bool loadOBJ(std::string path, uIntStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
 {
     std::vector<unsigned int> vIndices, uvIndices, normalIndices, tangentIndices, bitangentIndices;
     vec3Storage tmpVerts;
@@ -253,7 +253,7 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
         }
         else
         {
-            printf("Unsupported wavefront command on line %d in %s : %s\n", lineCounter, path, line.c_str());
+            printf("Unsupported wavefront command on line %d in %s : %s\n", lineCounter, path.c_str(), line.c_str());
         }     
     }
     if (vIndices.size() >= 65535)
@@ -281,7 +281,7 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
     return true;
 }
 
-bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
+bool loadOBJ(std::string path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
 {
     uIntStorage vboIndices;
     

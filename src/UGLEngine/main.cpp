@@ -19,10 +19,13 @@
 
 #include "WorldModelContainer.h"
 #include "ImageLoader.h"
-#include "Model3D.h"
 #include "CameraController.h"
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
+
+#include "ScenegraphNode.h"
+#include "Model.h"
+#include "Shader.h"
 
 void pathSetup()
 {
@@ -87,11 +90,14 @@ int main(int argc, const char * argv[])
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
     
-    sWMC.Init();
+    /*sWMC.Init();
     sWMC.CompileAndStoreShader("lit", "Shaders/Lit.vsh", "Shaders/Lit.fsh");
-    sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
+    sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");*/
+
+	Shader lit("Lit", "Shaders");
+	Shader skybox("Skybox", "Shaders");
     
-    GLuint programID = sWMC.GetShader("lit");
+	GLuint programID = lit.programHandle;
     //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
     
     //GLuint TrashcanTexture = loadDDS("Resources/Images/uvmap.DDS");
@@ -106,7 +112,7 @@ int main(int argc, const char * argv[])
     GLuint Lit_TextureID  = glGetUniformLocation(programID, "myTextureSampler");
     GLuint Lit_NormalTextureID = glGetUniformLocation(programID, "myNormalTextureSampler");
     
-    programID = sWMC.GetShader("skybox");
+	programID = skybox.programHandle;
     GLuint SkyboxTexture = loadBMP_custom("Resources/Images/JaredSkybox.bmp");
     //GLuint SkyboxTexture = loadDDS("Resources/Images/skybox.dds");
     
@@ -244,12 +250,102 @@ int main(int argc, const char * argv[])
     indexedVertices.clear();
     indexedNormals.clear();
     indexedUvs.clear();
+
+
+	// set up trash can's constant uniforms
+	lit.mount();
+
+	// Bind our texture in Texture Unit 0
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, TrashcanTexture);
+	// Bind our texture in Texture Unit 1
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, TrashcanNormalTexture);
+	// Set our "myTextureSampler" sampler to user Texture Unit 0
+	glUniform1i(Lit_TextureID, 0);
+	glUniform1i(Lit_NormalTextureID, 1);
     
+	SceneGlobals sceneGlobals;
+
+	
+
+	Model trashCanModel("Resources/Models/trashcan.wvf", &lit, &sceneGlobals);
+
+	ScenegraphNode joint;
+
+	ScenegraphNode trashCan;
+	trashCan.addChildNoSync(&trashCanModel);
+	trashCan.addChild(&joint);
+
+	ScenegraphNode root;
+	root.addChild(&trashCan);
+	root.relativeMtx = glm::scale(root.relativeMtx, glm::vec3(0.5f, 0.5f, 0.5f)); //make everything half size
+
+	for (unsigned int i = 0; i < 16; i++)
+	{
+		ScenegraphNode* newTrashCan = new ScenegraphNode();
+		newTrashCan->addChildNoSync(&trashCanModel);
+		joint.addChild(newTrashCan);
+		
+		newTrashCan->relativeMtx = glm::translate(newTrashCan->relativeMtx, glm::vec3(0, 1.5f, 0));
+		newTrashCan->relativeMtx = glm::rotate(newTrashCan->relativeMtx, glm::radians(i*(360.0f / 16.0f)), glm::vec3(0.0f, 1.0f, 0.0f));
+		newTrashCan->relativeMtx = glm::rotate(newTrashCan->relativeMtx, glm::radians(90.0f), glm::vec3(0, 0, 1.0f));
+		newTrashCan->relativeMtx = glm::scale(newTrashCan->relativeMtx, glm::vec3(0.5f, 0.5f, 0.5f));
+		newTrashCan->relativeMtx = glm::translate(newTrashCan->relativeMtx, glm::vec3(0, 5.0f, 0));
+	}
+
+
+	ScenegraphNode garbageMaze;
+
+	std::string garbageMazeLevelData =
+		"..##############\n"
+		"..#............#\n"
+		"#.#.######.###.#\n"
+		"#...##...#.#.#.#\n"
+		"#.#....#.#...#.#\n"
+		"#.####.#.###.###\n"
+		"#......#...#....\n"
+		"##############..\n";
+
+	float x = 0.0;
+	float y = 0.0;
+	for (unsigned int i = 0; i < garbageMazeLevelData.size(); i++)
+	{
+		char c = garbageMazeLevelData[i];
+		ScenegraphNode* newTrashCan;
+		switch (c)
+		{
+		case '#':
+			newTrashCan = new ScenegraphNode();
+			newTrashCan->addChildNoSync(&trashCanModel);
+			garbageMaze.addChild(newTrashCan);
+
+			newTrashCan->relativeMtx = glm::translate(newTrashCan->relativeMtx, glm::vec3(x, 0, y));
+			break;
+		case '\n':
+			y += 2;
+			x = 0;
+			break;
+		}
+
+		x += 2;
+	}
+
+	garbageMaze.relativeMtx = glm::translate(garbageMaze.relativeMtx, glm::vec3(5, 0, 5));
+	root.addChild(&garbageMaze);
     
     float rotDeg = 0.0f;
     double lastTime = glfwGetTime();
     int nbFrames = 0;
     float lightZ = 4;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
+	glDepthFunc(GL_LESS);
+
     while (1)
     {
         double currentTime = glfwGetTime();
@@ -273,17 +369,17 @@ int main(int argc, const char * argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
         
-        glUseProgram(sWMC.GetShader("skybox"));
+		skybox.mount();
         glm::mat4 ModelSkybox = glm::mat4(1.0f);
         // Don't use ViewMatrix for Skybox
         glm::mat4 MVPSkybox = getProjectionMatrix() * getViewMatrixWithoutTranslation() * ModelSkybox;
         
         glUniformMatrix4fv(Skybox_MVPID, 1, GL_FALSE, &MVPSkybox[0][0]);
         
-        glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, SkyboxTexture);
         // Set our "myTextureSampler" sampler to user Texture Unit 0
-        glUniform1i(Skybox_TextureID, 0);
+        glUniform1i(Skybox_TextureID, 2);
         
         //BindVAO
         glBindVertexArray(SkyboxVAO);
@@ -293,40 +389,24 @@ int main(int argc, const char * argv[])
         glFrontFace(GL_CCW);
         glDepthMask(GL_TRUE);
         
-        glUseProgram(sWMC.GetShader("lit"));
-        
-        rotDeg++;
-        glm::mat4 ModelCube = glm::mat4(1.0f);
-        ModelCube = glm::rotate(ModelCube, glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
-        glm::mat4 MVPCube = getProjectionMatrix() * getViewMatrix() * ModelCube;
-        
-        
-        glUniformMatrix4fv(Lit_MVPID, 1, GL_FALSE, &MVPCube[0][0]);
-        glUniformMatrix4fv(Lit_ModelMatrixID, 1, GL_FALSE, &ModelCube[0][0]);
-        glUniformMatrix4fv(Lit_ViewMatrixID, 1, GL_FALSE, &getViewMatrix()[0][0]);
-        
-        glm::vec3 lightPos = glm::vec3(4*cos(lightZ),4,4*sin(lightZ));
-        lightZ +=.03f;
-        
-        glUniform3f(Lit_LightID, lightPos.x, lightPos.y, lightPos.z);
-        
-        // Bind our texture in Texture Unit 0
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, TrashcanTexture);
-        // Bind our texture in Texture Unit 1
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, TrashcanNormalTexture);
-        // Set our "myTextureSampler" sampler to user Texture Unit 0
-        glUniform1i(Lit_TextureID, 0);
-        glUniform1i(Lit_NormalTextureID, 1);
-        
-        //BindVAO
-        glBindVertexArray(trashCanVAO);
-        //DrawElements
-        glDrawElements(GL_TRIANGLES, TrashcanIndiciesSize, GL_UNSIGNED_INT, 0);
-        
+
+
+		sceneGlobals.viewMatrix = getViewMatrix();
+		sceneGlobals.viewProjectionMatrix = getProjectionMatrix() * getViewMatrix();
+		sceneGlobals.lightPos = glm::vec3(4 * cos(lightZ), 4, 4 * sin(lightZ)) + getCameraPosition() - glm::vec3(1, 1, 4);
+		lightZ += .03f;
+
+		rotDeg++;
+		trashCan.relativeMtx = glm::rotate(glm::mat4x4(1.0f), glm::radians(rotDeg), glm::vec3(1.0f, 1.0f, 1.0f));
+		joint.relativeMtx = glm::rotate(glm::mat4x4(1.0f), glm::radians(2*rotDeg), glm::vec3(0, 1.0f, 0));
+		trashCanModel.relativeMtx = glm::rotate(glm::mat4x4(1.0f), glm::radians(rotDeg/4), glm::vec3(0, 1.0f, 0));
+
+		root.render(glm::mat4x4(1.0f));
+
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+		//std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
     
     
