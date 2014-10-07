@@ -329,6 +329,30 @@ static void updateKeyCodeLUT(void)
     }
 }
 
+// Check whether the IM has a usable style
+//
+static GLboolean hasUsableInputMethodStyle(void)
+{
+    unsigned int i;
+    GLboolean found = GL_FALSE;
+    XIMStyles* styles = NULL;
+
+    if (XGetIMValues(_glfw.x11.im, XNQueryInputStyle, &styles, NULL) != NULL)
+        return GL_FALSE;
+
+    for (i = 0;  i < styles->count_styles;  i++)
+    {
+        if (styles->supported_styles[i] == (XIMPreeditNothing | XIMStatusNothing))
+        {
+            found = GL_TRUE;
+            break;
+        }
+    }
+
+    XFree(styles);
+    return found;
+}
+
 // Check whether the specified atom is supported
 //
 static Atom getSupportedAtom(Atom* supportedAtoms,
@@ -423,6 +447,8 @@ static void detectEWMH(void)
         getSupportedAtom(supportedAtoms, atomCount, "_NET_WM_STATE_ABOVE");
     _glfw.x11.NET_WM_STATE_FULLSCREEN =
         getSupportedAtom(supportedAtoms, atomCount, "_NET_WM_STATE_FULLSCREEN");
+    _glfw.x11.NET_WM_FULLSCREEN_MONITORS =
+        getSupportedAtom(supportedAtoms, atomCount, "_NET_WM_FULLSCREEN_MONITORS");
     _glfw.x11.NET_WM_NAME =
         getSupportedAtom(supportedAtoms, atomCount, "_NET_WM_NAME");
     _glfw.x11.NET_WM_ICON_NAME =
@@ -507,6 +533,14 @@ static GLboolean initExtensions(void)
         }
 
         XRRFreeScreenResources(sr);
+    }
+
+    if (XineramaQueryExtension(_glfw.x11.display,
+                               &_glfw.x11.xinerama.versionMajor,
+                               &_glfw.x11.xinerama.versionMinor))
+    {
+        if (XineramaIsActive(_glfw.x11.display))
+            _glfw.x11.xinerama.available = GL_TRUE;
     }
 
     if (XQueryExtension(_glfw.x11.display,
@@ -605,17 +639,6 @@ static Cursor createNULLCursor(void)
     return _glfwCreateCursor(&image, 0, 0);
 }
 
-// Terminate X11 display
-//
-static void terminateDisplay(void)
-{
-    if (_glfw.x11.display)
-    {
-        XCloseDisplay(_glfw.x11.display);
-        _glfw.x11.display = NULL;
-    }
-}
-
 // X error handler
 //
 static int errorHandler(Display *display, XErrorEvent* event)
@@ -629,7 +652,7 @@ static int errorHandler(Display *display, XErrorEvent* event)
 //////                       GLFW internal API                      //////
 //////////////////////////////////////////////////////////////////////////
 
-// Install the X error handler
+// Sets the X error handler callback
 //
 void _glfwGrabXErrorHandler(void)
 {
@@ -637,7 +660,7 @@ void _glfwGrabXErrorHandler(void)
     XSetErrorHandler(errorHandler);
 }
 
-// Remove the X error handler
+// Clears the X error handler callback
 //
 void _glfwReleaseXErrorHandler(void)
 {
@@ -646,7 +669,7 @@ void _glfwReleaseXErrorHandler(void)
     XSetErrorHandler(NULL);
 }
 
-// Report X error
+// Reports the specified error, appending information about the last X error
 //
 void _glfwInputXError(int error, const char* message)
 {
@@ -657,7 +680,7 @@ void _glfwInputXError(int error, const char* message)
     _glfwInputError(error, "%s: %s", message, buffer);
 }
 
-// Create a cursor object
+// Creates a native cursor object from the specified image and hotspot
 //
 Cursor _glfwCreateCursor(const GLFWimage* image, int xhot, int yhot)
 {
@@ -713,6 +736,21 @@ int _glfwPlatformInit(void)
 
     _glfw.x11.cursor = createNULLCursor();
 
+    if (XSupportsLocale())
+    {
+        XSetLocaleModifiers("");
+
+        _glfw.x11.im = XOpenIM(_glfw.x11.display, 0, 0, 0);
+        if (_glfw.x11.im)
+        {
+            if (!hasUsableInputMethodStyle())
+            {
+                XCloseIM(_glfw.x11.im);
+                _glfw.x11.im = NULL;
+            }
+        }
+    }
+
     if (!_glfwInitContextAPI())
         return GL_FALSE;
 
@@ -730,11 +768,22 @@ void _glfwPlatformTerminate(void)
         _glfw.x11.cursor = (Cursor) 0;
     }
 
-    free(_glfw.x11.selection.string);
+    free(_glfw.x11.clipboardString);
+
+    if (_glfw.x11.im)
+    {
+        XCloseIM(_glfw.x11.im);
+        _glfw.x11.im = NULL;
+    }
 
     _glfwTerminateJoysticks();
     _glfwTerminateContextAPI();
-    terminateDisplay();
+
+    if (_glfw.x11.display)
+    {
+        XCloseDisplay(_glfw.x11.display);
+        _glfw.x11.display = NULL;
+    }
 }
 
 const char* _glfwPlatformGetVersionString(void)

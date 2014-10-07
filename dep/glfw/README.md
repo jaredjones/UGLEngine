@@ -68,7 +68,12 @@ GLFW bundles a number of dependencies in the `deps/` directory.
    `GLFW_RELEASE_BEHAVIOR_NONE` for `GL_KHR_context_flush_control` support
  - Added `GLFW_INCLUDE_ES31` for including the OpenGL ES 3.1 header
  - Added `GLFW_FLOATING` for creating always-on-top windowed mode windows
+ - Added `GLFW_FOCUSED` window hint for controlling initial input focus
  - Added *partial and experimental* support for Wayland
+ - Changed the default of `GLFW_REFRESH_RATE` to `GLFW_DONT_CARE` to maintain
+   the default behavior
+ - Changed static library to build as position independent code for easier use
+   from the Rust language
  - Bugfix: The debug context attribute was set from `GL_ARB_debug_output` even
            when a debug context had not been requested
  - Bugfix: The particles example was not linked against the threading library
@@ -87,14 +92,23 @@ GLFW bundles a number of dependencies in the `deps/` directory.
  - [Cocoa] Bugfix: Joystick enumeration took hundreds of ms on some systems
  - [Cocoa] Bugfix: The cursor was hidden when the user resized a GLFW window
  - [Win32] Enabled generation of pkg-config file for MinGW
+ - [Win32] Removed option to require explicitly linking against `winmm.dll`
  - [Win32] Bugfix: Failure to load winmm or its functions was not reported to
                    the error callback
  - [Win32] Bugfix: Some keys were reported based on the current layout instead
                    of their physical location
  - [Win32] Bugfix: Maximized hidden windows were restored by `glfwShowWindow`
  - [Win32] Bugfix: Context re-creation was not triggered by sRGB hint
+ - [Win32] Bugfix: Full screen windows were incorrectly sized and placed on some
+                   systems
+ - [Win32] Bugfix: Gamma ramp functions acted on entire desktop instead of the
+                   specified monitor
+ - [Win32] Bugfix: The wrong incorrect physical size was returned for
+                   non-primary monitors
  - [X11] Added run-time support for systems lacking the XKB extension
  - [X11] Made GLX 1.3 the minimum supported version
+ - [X11] Replaced `XRRGetScreenResources` with `XRRGetScreenResourcesCurrent`
+         for monitor property retrieval
  - [X11] Bugfix: The case of finding no usable CRTCs was not detected
  - [X11] Bugfix: Detection of broken Nvidia RandR gamma support did not verify
                  that at least one CRTC was present
@@ -108,6 +122,7 @@ GLFW bundles a number of dependencies in the `deps/` directory.
  - [X11] Bugfix: Workaround for legacy Compiz caused flickering during resize
  - [X11] Bugfix: The name pointer of joysticks were not cleared on disconnection
  - [X11] Bugfix: Video mode dimensions were not rotated to match the CRTC
+ - [X11] Bugfix: Unicode character input ignored dead keys
 
 
 ## Contact
@@ -159,10 +174,12 @@ skills.
  - Gerald Franz
  - GeO4d
  - Marcus Geelnard
+ - Eloi Marín Gratacós
  - Stefan Gustavson
  - Sylvain Hellegouarch
  - Matthew Henry
  - heromyth
+ - Lucas Hinderberger
  - Paul Holden
  - Toni Jovanoski
  - Arseny Kapoulkine

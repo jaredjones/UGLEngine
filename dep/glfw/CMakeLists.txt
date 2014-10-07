@@ -1,6 +1,6 @@
 project(GLFW C)
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8.9)
 
 set(GLFW_VERSION_MAJOR "3")
 set(GLFW_VERSION_MINOR "1")
@@ -124,6 +124,33 @@ if (MSVC)
     endif()
 endif()
 
+if (MINGW)
+    # Enable link-time exploit mitigation features enabled by default on MSVC
+
+    include(CheckCCompilerFlag)
+
+    # Compatibility with data execution prevention (DEP)
+    set(CMAKE_REQUIRED_FLAGS "-Wl,--nxcompat")
+    check_c_compiler_flag("" _GLFW_HAS_DEP)
+    if (_GLFW_HAS_DEP)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--nxcompat ${CMAKE_SHARED_LINKER_FLAGS}")
+    endif()
+
+    # Compatibility with address space layout randomization (ASLR)
+    set(CMAKE_REQUIRED_FLAGS "-Wl,--dynamicbase")
+    check_c_compiler_flag("" _GLFW_HAS_ASLR)
+    if (_GLFW_HAS_ASLR)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--dynamicbase ${CMAKE_SHARED_LINKER_FLAGS}")
+    endif()
+
+    # Compatibility with 64-bit address space layout randomization (ASLR)
+    set(CMAKE_REQUIRED_FLAGS "-Wl,--high-entropy-va")
+    check_c_compiler_flag("" _GLFW_HAS_64ASLR)
+    if (_GLFW_HAS_64ASLR)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--high-entropy-va ${CMAKE_SHARED_LINKER_FLAGS}")
+    endif()
+endif()
+
 #--------------------------------------------------------------------
 # Detect and select backend APIs
 #--------------------------------------------------------------------
@@ -168,14 +195,7 @@ endif()
 #--------------------------------------------------------------------
 if (_GLFW_WIN32)
 
-    set(GLFW_PKG_LIBS "${GLFW_PKG_LIBS} -lgdi32 -lwinmm")
-
-    # The DLL links against winmm; the static library loads it
-    # That way, both code paths receive testing
-    if (BUILD_SHARED_LIBS)
-        set(_GLFW_NO_DLOAD_WINMM 1)
-        list(APPEND glfw_LIBRARIES winmm)
-    endif()
+    set(GLFW_PKG_LIBS "${GLFW_PKG_LIBS} -lgdi32")
 
     if (GLFW_USE_DWM_SWAP_INTERVAL)
         set(_GLFW_USE_DWM_SWAP_INTERVAL 1)
@@ -228,6 +248,15 @@ if (_GLFW_X11)
     list(APPEND glfw_INCLUDE_DIRS "${X11_Xrandr_INCLUDE_PATH}")
     list(APPEND glfw_LIBRARIES "${X11_Xrandr_LIB}")
     set(GLFW_PKG_DEPS "${GLFW_PKG_DEPS} xrandr")
+
+    # Check for Xinerama (legacy multi-monitor support)
+    if (NOT X11_Xinerama_FOUND)
+        message(FATAL_ERROR "The Xinerama library and headers were not found")
+    endif()
+
+    list(APPEND glfw_INCLUDE_DIRS "${X11_Xinerama_INCLUDE_PATH}")
+    list(APPEND glfw_LIBRARIES "${X11_Xinerama_LIB}")
+    set(GLFW_PKG_DEPS "${GLFW_PKG_DEPS} xinerama")
 
     # Check for XInput (high-resolution cursor motion)
     if (NOT X11_Xinput_FOUND)
