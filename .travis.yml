@@ -5,12 +5,16 @@ git:
   depth: 1
 
 before_install:
+  - echo "yes" | sudo add-apt-repository ppa:kalakris/cmake
+  - echo "yes" | sudo add-apt-repository ppa:boost-latest/ppa
+  - echo "yes" | sudo add-apt-repository ppa:ubuntu-toolchain-r/test
   - sudo apt-get -qq update
-  - sudo apt-get -qq install build-essential libtool gcc cmake make openssl libssl-dev
+  - sudo apt-get -qq install build-essential libtool gcc-4.8 g++-4.8 make cmake openssl
 
 install:
   - mkdir build
   - cd build
   - cmake ../
+
 script:
   - make -j 8
