@@ -1,0 +1,16 @@
+language: cpp
+compiler:
+	-clang
+git:
+	depth: 1
+
+before_install:
+	- sudo apt-get -qq update
+	- sudo apt-get -qq install build-essential libtool gcc cmake make openssl libssl-dev
+
+install:
+	- mkdir build
+	- cd build
+	- cmake ../
+script:
+	- make -j 8
