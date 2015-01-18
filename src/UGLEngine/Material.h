@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "shader.h"
+#include "Shader.h"
 
 struct TextureHandleUniformHandlePair{
 	GLuint textureHandle;
