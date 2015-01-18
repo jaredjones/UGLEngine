@@ -53,6 +53,7 @@ unsigned int DenseMap<ValueType>::add(ValueType* value)
                 holes--;
 				return i;
             }
+        return 0;
     }
 
 	return 0; //this will never happen, because if holes is > 0, the for loop above will find one.

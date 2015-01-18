@@ -14,7 +14,7 @@ bool readFileIntoString(std::string path, std::string &data)
 	}
 	else
 	{
-		printf("ERROR: Failed to open: %s\n", path);
+		printf("ERROR: Failed to open: %s\n", path.c_str());
 		return false;
 	}
 };

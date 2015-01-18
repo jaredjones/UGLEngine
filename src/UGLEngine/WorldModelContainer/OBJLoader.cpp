@@ -129,14 +129,14 @@ bool loadOBJ(std::string path, uIntStorage &out_indices, vec3Storage &out_vertic
             if ((fvtIndices.size() > 0 && fvtIndices.size() != fvIndices.size()) ||
                 (fvnIndices.size() > 0 && fvnIndices.size() != fvIndices.size()) )
             {
-                printf("Face with malformed vertices on line:%d in %s : %s\n", lineCounter, path, line.c_str());
+                printf("Face with malformed vertices on line:%d in %s : %s\n", lineCounter, path.c_str(), line.c_str());
                 continue;
             }
             
             
             if (fvIndices.size() < 3)
             {
-                printf("Face with less than 3 verticies on line:%d in %s : %s\n", lineCounter, path, line.c_str());
+                printf("Face with less than 3 verticies on line:%d in %s : %s\n", lineCounter, path.c_str(), line.c_str());
                 continue;
             }
             
