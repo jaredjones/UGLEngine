@@ -45,7 +45,7 @@ traction.
 If you wish to use the C++11 or C11 facilities but your compiler doesn't yet
 support them, see the
 [TinyThread++](https://gitorious.org/tinythread/tinythreadpp) and
-[TinyCThread](https://gitorious.org/tinythread/tinycthread) projects created by
+[TinyCThread](https://github.com/tinycthread/tinycthread) projects created by
 the original author of GLFW.  These libraries implement a usable subset of the
 threading APIs in C++11 and C11, and in fact some GLFW 3 test programs use
 TinyCThread.
@@ -390,7 +390,7 @@ All explicit support for version of Windows older than XP has been removed.
 There is no code that actively prevents GLFW 3 from running on these earlier
 versions, but it uses Win32 functions that those versions lack.
 
-Windows XP was released in 2001, and by now (2013) it has not only
+Windows XP was released in 2001, and by now (January 2015) it has not only
 replaced almost all earlier versions of Windows, but is itself rapidly being
 replaced by Windows 7 and 8.  The MSDN library doesn't even provide
 documentation for version older than Windows 2000, making it difficult to

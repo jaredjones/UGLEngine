@@ -224,6 +224,7 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
 
             for (j = 0;  j < ci->noutput;  j++)
             {
+                int widthMM, heightMM;
                 XRROutputInfo* oi = XRRGetOutputInfo(_glfw.x11.display,
                                                      sr, ci->outputs[j]);
                 if (oi->connection != RR_Connected)
@@ -238,10 +239,18 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
                     monitors = realloc(monitors, sizeof(_GLFWmonitor*) * size);
                 }
 
-                monitors[found] = _glfwAllocMonitor(oi->name,
-                                                    oi->mm_width,
-                                                    oi->mm_height);
+                if (ci->rotation == RR_Rotate_90 || ci->rotation == RR_Rotate_270)
+                {
+                    widthMM  = oi->mm_height;
+                    heightMM = oi->mm_width;
+                }
+                else
+                {
+                    widthMM  = oi->mm_width;
+                    heightMM = oi->mm_height;
+                }
 
+                monitors[found] = _glfwAllocMonitor(oi->name, widthMM, heightMM);
                 monitors[found]->x11.output = ci->outputs[j];
                 monitors[found]->x11.crtc   = oi->crtc;
 
@@ -464,6 +473,13 @@ void _glfwPlatformSetGammaRamp(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 //////////////////////////////////////////////////////////////////////////
 //////                        GLFW native API                       //////
 //////////////////////////////////////////////////////////////////////////
+
+GLFWAPI RRCrtc glfwGetX11Adapter(GLFWmonitor* handle)
+{
+    _GLFWmonitor* monitor = (_GLFWmonitor*) handle;
+    _GLFW_REQUIRE_INIT_OR_RETURN(None);
+    return monitor->x11.crtc;
+}
 
 GLFWAPI RROutput glfwGetX11Monitor(GLFWmonitor* handle)
 {

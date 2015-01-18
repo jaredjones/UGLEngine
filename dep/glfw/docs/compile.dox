@@ -228,8 +228,10 @@ if DWM is enabled.  It is recommended to set this to `OFF`, as doing otherwise
 can lead to severe jitter.
 
 `GLFW_USE_OPTIMUS_HPG` determines whether to export the `NvOptimusEnablement`
-symbol, which forces the use of the high-performance GPU on nVidia Optimus
-systems.
+symbol, which forces the use of the high-performance GPU on Nvidia Optimus
+systems.  This symbol needs to be exported by the EXE to be detected by the
+driver, so the override will not work if GLFW is built as a DLL.  See _Enabling
+High Performance Graphics Rendering on Optimus Systems_ for more details.
 
 
 @subsubsection compile_options_egl EGL specific CMake options
@@ -252,7 +254,7 @@ defines `_GLFW_USE_CONFIG_H`, which causes this header to be included by
 `internal.h`.  Without this macro, GLFW will expect the necessary configuration
 macros to be defined on the command-line.
 
-Three macros _must_ be defined when compiling GLFW: one for selecting the window
+Three macros _must_ be defined when compiling GLFW: one selecting the window
 creation API, one selecting the context creation API and one client library.
 Exactly one of each kind must be defined for GLFW to compile and link.
 
@@ -263,6 +265,7 @@ ramps and clipboard.  The options are:
  - `_GLFW_WIN32` to use the Win32 API
  - `_GLFW_X11` to use the X Window System
  - `_GLFW_WAYLAND` to use the Wayland API (experimental and incomplete)
+ - `_GLFW_MIR` to use the Mir API (experimental and incomplete)
 
 The context creation API is used to enumerate pixel formats / framebuffer
 configurations and to create contexts.  The options are:
@@ -271,6 +274,8 @@ configurations and to create contexts.  The options are:
  - `_GLFW_WGL` to use the Win32 WGL API
  - `_GLFW_GLX` to use the X11 GLX API
  - `_GLFW_EGL` to use the EGL API
+
+Wayland and Mir both require the EGL backend.
 
 The client library is the one providing the OpenGL or OpenGL ES API, which is
 used by GLFW to probe the created context.  This is not the same thing as the
