@@ -13,7 +13,7 @@ guides for the other areas of GLFW.
  - @ref input
 
 
-@section monitor_objects Monitor objects
+@section monitor_object Monitor objects
 
 A monitor object represents a currently connected monitor and is represented as
 a pointer to the [opaque](https://en.wikipedia.org/wiki/Opaque_data_type) type
@@ -31,7 +31,7 @@ video mode, describes the viewports that the connected monitors provide into the
 virtual desktop that spans them.
 
 To see how GLFW views your monitor setup and its available video modes, run the
-`modes` test program.
+`monitors` test program.
 
 
 @subsection monitor_monitors Retrieving monitors
