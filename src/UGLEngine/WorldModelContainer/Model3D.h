@@ -19,7 +19,7 @@ public:
     
     
 private:
-    bool _quadBased;
+    //bool _quadBased;
     std::string _path;
 };
 

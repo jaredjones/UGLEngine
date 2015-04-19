@@ -66,11 +66,16 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     std::vector<char> VertexShaderErrorMessage(InfoLogLength);
     glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-    if (&VertexShaderErrorMessage[0] != nullptr)
+    
+    void *errorExists;
+    
+    errorExists = &VertexShaderErrorMessage[0];
+    if (errorExists != nullptr)
     {
         //error = true;
         fprintf(stdout, "%s\n", &VertexShaderErrorMessage[0]);
     }
+    errorExists = nullptr;
     
     // Compile Fragment Shader
     printf("Compiling shader : %s\n", fragPath.c_str());
@@ -83,11 +88,14 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
     std::vector<char> FragmentShaderErrorMessage(InfoLogLength);
     glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-    if (&FragmentShaderErrorMessage[0] != nullptr)
+    
+    errorExists = &FragmentShaderErrorMessage[0];
+    if (errorExists != nullptr)
     {
         //error = true;
         fprintf(stdout, "%s\n", &FragmentShaderErrorMessage[0]);
     }
+    errorExists = nullptr;
     
     // Link the program
     fprintf(stdout, "Linking shader program\n");
