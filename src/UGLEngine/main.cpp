@@ -8,15 +8,17 @@
 
 #define GLM_FORCE_RADIANS
 
-#include <Common.h>
-
 #include <iostream>
+#include <thread>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 #include <trigonometric.hpp>
 #include <gtx/transform.hpp>
 
+#include <Common.h>
+#include <Utilities.h>
 #include "WorldModelContainer.h"
 #include "ImageLoader.h"
 #include "Model3D.h"
@@ -24,28 +26,15 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
-void pathSetup()
-{
-#ifdef __APPLE__
-    // This makes relative paths work in C++ in Xcode by changing directory to the Resources folder inside the .app bundle
-    CFBundleRef mainBundle = CFBundleGetMainBundle();
-    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
-    char path[PATH_MAX];
-    if (!CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX))
-    {
-        // error!
-    }
-    CFRelease(resourcesURL);
-    
-    chdir(path);
-    printf("Current Path:%s\n", path);
-#endif
-}
+std::atomic<bool> Closing;
+
+// Function prototypes
+void logic();
+void render(GLFWwindow *w);
 
 int main(int argc, const char * argv[])
 {
-    pathSetup();
-    GLFWwindow *window;
+    ApplePathSetup();
     
     if (!glfwInit())
     {
@@ -55,11 +44,11 @@ int main(int argc, const char * argv[])
     
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 8);
     
-    window = glfwCreateWindow(800, 600, "UGLEngine", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(800, 600, "UGLEngine", NULL, NULL);
     
     if (!window)
     {
@@ -68,22 +57,14 @@ int main(int argc, const char * argv[])
         return -1;
     }
     
-    //Makes a window the receiver for OpenGL Commands
-    glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
+    //Start Render and Logic threads.
+    std::thread ren(render, window);
+    std::thread log(logic);
     
-    glewExperimental = GL_TRUE;
-    glewInit();
     
-    std::cout << glGetString(GL_VENDOR) << std::endl;
-    std::cout << glGetString(GL_VERSION) << std::endl;
-    std::cout << glGetString(GL_RENDERER) << std::endl;
-    
-    /*The version is formatted as <version number><space><vendor-specific information>,
-     where <version number> is a MAJOR.MINOR format, with an optional release number.
-     */
-    std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+#ifdef DEBUG
     chdir(CURRENT_WORKING_DIRECTORY);
+#endif
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
     
@@ -346,5 +327,57 @@ int main(int argc, const char * argv[])
     
     glfwTerminate();
     return 0;
+}
+
+void render(GLFWwindow *w)
+{
+    bool inited = false;
+    
+    //Renderer Loop
+    while (!Closing)
+    {
+        //Perform Initial Renderer Setup
+        if (!inited)
+        {
+            //Make this thread and window writable for OpenGL Calls
+            glfwMakeContextCurrent(w);
+            
+            //Enable GLEW and allow Expiremental Features (Important)
+            glewExperimental = GL_TRUE;
+            glewInit();
+            
+            //Enable Vertical Syncronization
+            glfwSwapInterval(1);
+            
+            std::cout << glGetString(GL_VENDOR) << std::endl;
+            std::cout << glGetString(GL_VERSION) << std::endl;
+            std::cout << glGetString(GL_RENDERER) << std::endl;
+            
+            // The version is formatted as <version number><space><vendor-specific information>,
+            // where <version number> is a MAJOR.MINOR format, with an optional release number.
+            std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+            
+            inited = true;
+        }
+        //Set the background color that is used when glClear is called
+        glClearColor(0.0f, 255.0/255.0f, 0.0f, 1.0f);
+        //Clear both the depth and color buffer
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        //RENDERING STARTS HERE
+        
+        //Bring everything we just drew onto the screen
+        glfwSwapBuffers(w);
+    }
+}
+
+void logic()
+{
+    while (!Closing)
+    {
+        // Slow down thread since it's not doing anything
+        // WARNING: If you halt this thread the program will not close until this thread exits.
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 }
 
