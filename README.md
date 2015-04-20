@@ -7,7 +7,7 @@
 + CMake ≥ 2.8.11.2 / 2.8.9 (Windows / Linux)
 + OpenSSL ≥ 1.0.0
 + GCC ≥ 4.7.2 (Linux only)
-+ MS Visual Studio ≥ 12 (2013) (Windows only)
++ MS Visual Studio ≥ 12 Update 3 (2013) (Windows only)
 
 In order to run this project you will need to download the Resources.zip
 Download Link: http://www.mediafire.com/download/80w679l43kc2l6o/Resources.zip
