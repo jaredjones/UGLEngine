@@ -27,7 +27,7 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
-#define SLEEP_CONSTANT 10
+#define SLEEP_CONSTANT 8
 
 std::atomic<bool> Closing;
 
