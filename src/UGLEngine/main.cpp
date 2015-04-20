@@ -32,7 +32,6 @@
 std::atomic<bool> Closing;
 
 // Function prototypes
-void logic();
 void render(GLFWwindow *w);
 
 int main(int argc, const char * argv[])
@@ -62,7 +61,6 @@ int main(int argc, const char * argv[])
     
     //Start Render and Logic threads.
     std::thread ren(render, window);
-    std::thread log(logic);
     
 #ifdef DEBUG
     chdir(CURRENT_WORKING_DIRECTORY);
@@ -82,8 +80,15 @@ int main(int argc, const char * argv[])
         
         //#### BEGIN MAIN THREAD LOGIC ####
         
+        //If another (core) thread demands closure then our main loop must conclude
+        if (Closing)
+            glfwSetWindowShouldClose(window, GL_TRUE);
+        
         //Poll events for stuff like the keyboard, mouse, trackpad, etc.
         glfwPollEvents();
+        
+        
+        
         
         //#### END MAIN THREAD LOGIC ####
         
@@ -106,7 +111,6 @@ int main(int argc, const char * argv[])
     //Main thread has finished, so we must die.
     Closing = true;
     
-    log.join();
     ren.join();
     
     glfwTerminate();
@@ -116,7 +120,8 @@ int main(int argc, const char * argv[])
 void render(GLFWwindow *w)
 {
     bool inited = false;
-    
+    double lastTime = 0;
+    int nbFrames = 0;
     //Renderer Loop
     while (!Closing)
     {
@@ -148,6 +153,17 @@ void render(GLFWwindow *w)
             
             inited = true;
         }
+        double currentTime = glfwGetTime();
+        nbFrames++;
+        // If last prinf() was more than 1 sec ago
+        if ( currentTime - lastTime >= 1.0 )
+        {
+            // printf and reset timer
+            printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
+            nbFrames = 0;
+            lastTime += 1.0;
+        }
+        
         //Set the background color that is used when glClear is called
         glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
         //Clear both the depth and color buffer
@@ -157,18 +173,6 @@ void render(GLFWwindow *w)
         
         //Bring everything we just drew onto the screen
         glfwSwapBuffers(w);
-    }
-}
-
-void logic()
-{
-    while (!Closing)
-    {
-        
-        
-        // Slow down thread since it's not doing anything
-        // WARNING: If you halt this thread the program will not close until this thread exits.
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
