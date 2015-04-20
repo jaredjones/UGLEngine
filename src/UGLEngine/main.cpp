@@ -27,6 +27,8 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
+#define SLEEP_CONSTANT 50
+
 std::atomic<bool> Closing;
 
 // Function prototypes
@@ -62,20 +64,43 @@ int main(int argc, const char * argv[])
     std::thread ren(render, window);
     std::thread log(logic);
     
-    
 #ifdef DEBUG
     chdir(CURRENT_WORKING_DIRECTORY);
 #endif
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
     
+    uint64 realCurrTime = 0;
+    uint64 realPrevTime = getMSTime();
+    
+    uint64 prevSleepTime = 0;// used for balanced full tick time length near WORLD_SLEEP_CONST
+    
     while(!glfwWindowShouldClose(window))
     {
+        realCurrTime = getMSTime();
+        uint64 diff = getMSTimeDiff(realPrevTime, realCurrTime);
+        
+        //#### BEGIN MAIN THREAD LOGIC ####
+        
         //Poll events for stuff like the keyboard, mouse, trackpad, etc.
         glfwPollEvents();
         
-        //Slow the main thread down since not much happens here at the moment
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        //#### END MAIN THREAD LOGIC ####
+        
+        realPrevTime = realCurrTime;
+        
+        // diff (D0) include time of previous sleep (d0) + tick time (t0)
+        // we want that next d1 + t1 == SLEEP_CONSTANT
+        // we can't know next t1 and then can use (t0 + d1) == SLEEP_CONSTANT requirement
+        // d1 = WORLD_SLEEP_CONST - t0 = SLEEP_CONSTANT - (D0 - d0) = SLEEP_CONSTANT + d0 - D0
+        if (diff <= SLEEP_CONSTANT + prevSleepTime)
+        {
+            prevSleepTime = SLEEP_CONSTANT + prevSleepTime - diff;
+            std::this_thread::sleep_for(std::chrono::milliseconds(prevSleepTime));
+        }
+        else
+            prevSleepTime = 0;
+        
     }
     
     //Main thread has finished, so we must die.
@@ -139,9 +164,11 @@ void logic()
 {
     while (!Closing)
     {
+        
+        
         // Slow down thread since it's not doing anything
         // WARNING: If you halt this thread the program will not close until this thread exits.
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
