@@ -79,7 +79,9 @@ int main(int argc, const char * argv[])
         realCurrTime = getMSTime();
         uint64 diff = getMSTimeDiff(realPrevTime, realCurrTime);
         
+        //#################################
         //#### BEGIN MAIN THREAD LOGIC ####
+        //#################################
         
         //If another (core) thread demands closure then our main loop must conclude
         if (Closing)
@@ -90,16 +92,15 @@ int main(int argc, const char * argv[])
         //Poll events for stuff like the keyboard, mouse, trackpad, etc.
         glfwPollEvents();
         
-    
-        
+        //###############################
         //#### END MAIN THREAD LOGIC ####
-        
-        realPrevTime = realCurrTime;
+        //###############################
         
         // diff (D0) include time of previous sleep (d0) + tick time (t0)
         // we want that next d1 + t1 == SLEEP_CONSTANT
         // we can't know next t1 and then can use (t0 + d1) == SLEEP_CONSTANT requirement
         // d1 = WORLD_SLEEP_CONST - t0 = SLEEP_CONSTANT - (D0 - d0) = SLEEP_CONSTANT + d0 - D0
+        realPrevTime = realCurrTime;
         if (diff <= SLEEP_CONSTANT + prevSleepTime)
         {
             prevSleepTime = SLEEP_CONSTANT + prevSleepTime - diff;
