@@ -27,7 +27,7 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 
-#define SLEEP_CONSTANT 10
+#define SLEEP_CONSTANT 50
 
 std::atomic<bool> Closing;
 
@@ -107,7 +107,6 @@ int main(int argc, const char * argv[])
         }
         else
             prevSleepTime = 0;
-        
     }
     
     //Main thread has finished, so we must die.
@@ -317,7 +316,7 @@ void render(GLFWwindow *w)
         if ( currentTime - lastTime >= 1.0 )
         {
             // printf and reset timer
-            printf("FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
+            printf("Render FPS:%f ms/F:%f\n", 1/(1.0/double(nbFrames)), 1000.0/double(nbFrames));
             nbFrames = 0;
             lastTime += 1.0;
         }
@@ -386,8 +385,20 @@ void render(GLFWwindow *w)
     }
 }
 
+double lastLogicTime = 0;
+int nbLogicFrames = 0;
 void gameUpdate(GLFWwindow *w)
 {
+        double currentTime = glfwGetTime();
+        nbLogicFrames++;
+        // If last prinf() was more than 1 sec ago
+        if ( currentTime - lastLogicTime >= 1.0 )
+        {
+            // printf and reset timer
+            printf("Logic FPS:%f ms/F:%f\n", 1/(1.0/double(nbLogicFrames)), 1000.0/double(nbLogicFrames));
+            nbLogicFrames = 0;
+            lastLogicTime += 1.0;
+        }
     computeMatricesFromInputs(w);
 }
 

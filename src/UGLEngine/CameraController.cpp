@@ -56,6 +56,8 @@ void computeMatricesFromInputs(GLFWwindow* window)
     
     glm::vec3 up = glm::cross(right, direction);
     
+    
+    
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         position += direction * deltaTime * speed;
@@ -84,11 +86,11 @@ void computeMatricesFromInputs(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
-        horizontalAngle += mouseSpeed * 4;
+        horizontalAngle += deltaTime * speed;
     }
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
-        horizontalAngle -= mouseSpeed * 4;
+        horizontalAngle -= deltaTime * speed;
     }
     
     double curxpos, curypos;
