@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <thread>
+#include <atomic>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -67,6 +68,18 @@ int main(int argc, const char * argv[])
 #endif
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
+    
+    while(!glfwWindowShouldClose(window))
+    {
+        //Poll events for stuff like the keyboard, mouse, trackpad, etc.
+        glfwPollEvents();
+        
+        //Slow the main thread down since not much happens here at the moment
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    
+    //Main thread has finished, so we must die.
+    Closing = true;
     
     log.join();
     ren.join();
