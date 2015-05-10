@@ -107,7 +107,7 @@ GLuint WorldModelContainer::_compileShader(std::string vertexPath, std::string f
     // Check the program
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
     glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
-    std::vector<char> ProgramErrorMessage( max(InfoLogLength, int(1)) );
+    std::vector<char> ProgramErrorMessage( std::max(InfoLogLength, int(1)) );
     glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
     fprintf(stdout, "%s\n", &ProgramErrorMessage[0]);
     

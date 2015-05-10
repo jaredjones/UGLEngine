@@ -122,7 +122,7 @@
 #endif
 
 #if COMPILER == COMPILER_MICROSOFT
-
+#define NOMINMAX
 #include <float.h>
 #include <Windows.h>
 
