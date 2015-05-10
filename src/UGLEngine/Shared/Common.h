@@ -91,7 +91,7 @@
 #endif
 #endif
 
-#ifdef DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
 #define CONFIG "Debug"
 #else
 #define CONFIG "Release"

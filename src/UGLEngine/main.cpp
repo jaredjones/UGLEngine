@@ -63,7 +63,7 @@ int main(int argc, const char * argv[])
     //Start Render and Logic threads.
     std::thread ren(render, window);
     
-#ifdef DEBUG
+#if defined(DEBUG) || defined(_DEBUG)
     chdir(CURRENT_WORKING_DIRECTORY);
 #endif
     char * dir = getcwd(NULL, 0);
