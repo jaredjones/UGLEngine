@@ -37,6 +37,7 @@
 #include <CoreVideo/CVDisplayLink.h>
 #include <ApplicationServices/ApplicationServices.h>
 
+
 // Returns the io_service_t corresponding to a CG display ID, or 0 on failure.
 // The io_service_t should be released with IOObjectRelease when not needed.
 //
@@ -69,7 +70,7 @@ static io_service_t IOServicePortFromCGDisplayID(CGDirectDisplayID displayID)
         productIDRef = CFDictionaryGetValue(info,
                                             CFSTR(kDisplayProductID));
         serialNumberRef = CFDictionaryGetValue(info,
-                                            CFSTR(kDisplaySerialNumber));
+                                               CFSTR(kDisplaySerialNumber));
         
         success = CFNumberGetValue(vendorIDRef, kCFNumberCFIndexType,
                                    &vendorID);
@@ -77,19 +78,19 @@ static io_service_t IOServicePortFromCGDisplayID(CGDirectDisplayID displayID)
                                     &productID);
         success &= CFNumberGetValue(serialNumberRef, kCFNumberCFIndexType,
                                     &serialNumber);
-
+        
         /*
-        // Special Debugging Variables
-        //
-        printf("Display ID: %u\n", displayID);
-        printf("Vendor  ID: %ld\n", vendorID);
-        printf("Product ID: %ld\n", productID);
-        printf("Serial  NM: %ld\n", serialNumber);
-        printf("DispID ->Vendor #: %u\n", CGDisplayVendorNumber(displayID));
-        printf("DispID ->Modal  #: %u\n", CGDisplayModelNumber(displayID));
-        printf("DispID ->Serial #: %u\n", CGDisplaySerialNumber(displayID));
-        printf("###############\n");
-        */
+         // Special Debugging Variables
+         //
+         printf("Display ID: %u\n", displayID);
+         printf("Vendor  ID: %ld\n", vendorID);
+         printf("Product ID: %ld\n", productID);
+         printf("Serial  NM: %ld\n", serialNumber);
+         printf("DispID ->Vendor #: %u\n", CGDisplayVendorNumber(displayID));
+         printf("DispID ->Modal  #: %u\n", CGDisplayModelNumber(displayID));
+         printf("DispID ->Serial #: %u\n", CGDisplaySerialNumber(displayID));
+         printf("###############\n");
+         */
         
         if (!success)
         {
@@ -129,6 +130,7 @@ static char* getDisplayName(CGDirectDisplayID displayID)
     CFStringRef value;
     CFIndex size;
 
+    // Supports OS X 10.4 Tiger and Newer
     io_service_t serv = IOServicePortFromCGDisplayID(displayID);
     if (serv == 0)
         return "IOServicePortFromCGDisplayID Returned an Invalid Port. (0)";
@@ -136,25 +138,25 @@ static char* getDisplayName(CGDirectDisplayID displayID)
     IOObjectRelease(serv);
     
     names = CFDictionaryGetValue(info, CFSTR(kDisplayProductName));
-    
+
     if (!names || !CFDictionaryGetValueIfPresent(names, CFSTR("en_US"),
                                                  (const void**) &value))
     {
         // This may happen if a desktop Mac is running headless
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "Cocoa: Failed to retrieve display name");
-        
+
         CFRelease(info);
         return strdup("Unknown");
     }
-    
+
     size = CFStringGetMaximumSizeForEncoding(CFStringGetLength(value),
                                              kCFStringEncodingUTF8);
     name = calloc(size + 1, sizeof(char));
     CFStringGetCString(value, name, size, kCFStringEncodingUTF8);
-    
+
     CFRelease(info);
-    
+
     return name;
 }
 
@@ -165,13 +167,13 @@ static GLboolean modeIsGood(CGDisplayModeRef mode)
     uint32_t flags = CGDisplayModeGetIOFlags(mode);
     if (!(flags & kDisplayModeValidFlag) || !(flags & kDisplayModeSafeFlag))
         return GL_FALSE;
-    
+
     if (flags & kDisplayModeInterlacedFlag)
         return GL_FALSE;
-    
+
     if (flags & kDisplayModeStretchedFlag)
         return GL_FALSE;
-    
+
     CFStringRef format = CGDisplayModeCopyPixelEncoding(mode);
     if (CFStringCompare(format, CFSTR(IO16BitDirectPixels), 0) &&
         CFStringCompare(format, CFSTR(IO32BitDirectPixels), 0))
@@ -179,7 +181,7 @@ static GLboolean modeIsGood(CGDisplayModeRef mode)
         CFRelease(format);
         return GL_FALSE;
     }
-    
+
     CFRelease(format);
     return GL_TRUE;
 }
@@ -193,16 +195,16 @@ static GLFWvidmode vidmodeFromCGDisplayMode(CGDisplayModeRef mode,
     result.width = (int) CGDisplayModeGetWidth(mode);
     result.height = (int) CGDisplayModeGetHeight(mode);
     result.refreshRate = (int) CGDisplayModeGetRefreshRate(mode);
-    
+
     if (result.refreshRate == 0)
     {
         const CVTime time = CVDisplayLinkGetNominalOutputVideoRefreshPeriod(link);
         if (!(time.flags & kCVTimeIsIndefinite))
             result.refreshRate = (int) (time.timeScale / (double) time.timeValue);
     }
-    
+
     CFStringRef format = CGDisplayModeCopyPixelEncoding(mode);
-    
+
     if (CFStringCompare(format, CFSTR(IO16BitDirectPixels), 0) == 0)
     {
         result.redBits = 5;
@@ -215,7 +217,7 @@ static GLFWvidmode vidmodeFromCGDisplayMode(CGDisplayModeRef mode,
         result.greenBits = 8;
         result.blueBits = 8;
     }
-    
+
     CFRelease(format);
     return result;
 }
@@ -225,10 +227,10 @@ static GLFWvidmode vidmodeFromCGDisplayMode(CGDisplayModeRef mode,
 static CGDisplayFadeReservationToken beginFadeReservation(void)
 {
     CGDisplayFadeReservationToken token = kCGDisplayFadeReservationInvalidToken;
-    
+
     if (CGAcquireDisplayFadeReservation(5, &token) == kCGErrorSuccess)
         CGDisplayFade(token, 0.3, kCGDisplayBlendNormal, kCGDisplayBlendSolidColor, 0.0, 0.0, 0.0, TRUE);
-    
+
     return token;
 }
 
@@ -258,23 +260,23 @@ GLboolean _glfwSetVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired)
     CGDisplayModeRef native = NULL;
     GLFWvidmode current;
     const GLFWvidmode* best;
-    
+
     best = _glfwChooseVideoMode(monitor, desired);
     _glfwPlatformGetVideoMode(monitor, &current);
     if (_glfwCompareVideoModes(&current, best) == 0)
         return GL_TRUE;
-    
+
     CVDisplayLinkCreateWithCGDisplay(monitor->ns.displayID, &link);
-    
+
     modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, NULL);
     count = CFArrayGetCount(modes);
-    
+
     for (i = 0;  i < count;  i++)
     {
         CGDisplayModeRef dm = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
         if (!modeIsGood(dm))
             continue;
-        
+
         const GLFWvidmode mode = vidmodeFromCGDisplayMode(dm, link);
         if (_glfwCompareVideoModes(best, &mode) == 0)
         {
@@ -282,27 +284,27 @@ GLboolean _glfwSetVideoMode(_GLFWmonitor* monitor, const GLFWvidmode* desired)
             break;
         }
     }
-    
+
     if (native)
     {
         if (monitor->ns.previousMode == NULL)
             monitor->ns.previousMode = CGDisplayCopyDisplayMode(monitor->ns.displayID);
-        
+
         CGDisplayFadeReservationToken token = beginFadeReservation();
         CGDisplaySetDisplayMode(monitor->ns.displayID, native, NULL);
         endFadeReservation(token);
     }
-    
+
     CFRelease(modes);
     CVDisplayLinkRelease(link);
-    
+
     if (!native)
     {
         _glfwInputError(GLFW_PLATFORM_ERROR,
                         "Cocoa: Monitor mode list changed");
         return GL_FALSE;
     }
-    
+
     return GL_TRUE;
 }
 
@@ -316,7 +318,7 @@ void _glfwRestoreVideoMode(_GLFWmonitor* monitor)
         CGDisplaySetDisplayMode(monitor->ns.displayID,
                                 monitor->ns.previousMode, NULL);
         endFadeReservation(token);
-        
+
         CGDisplayModeRelease(monitor->ns.previousMode);
         monitor->ns.previousMode = NULL;
     }
@@ -332,58 +334,53 @@ _GLFWmonitor** _glfwPlatformGetMonitors(int* count)
     uint32_t i, found = 0, displayCount;
     _GLFWmonitor** monitors;
     CGDirectDisplayID* displays;
-    
+
     *count = 0;
-    
+
     CGGetOnlineDisplayList(0, NULL, &displayCount);
-    
     displays = calloc(displayCount, sizeof(CGDirectDisplayID));
     monitors = calloc(displayCount, sizeof(_GLFWmonitor*));
-    
+
     CGGetOnlineDisplayList(displayCount, displays, &displayCount);
-    
     NSArray* screens = [NSScreen screens];
-    
+
     for (i = 0;  i < displayCount;  i++)
     {
-        int j;
-        
+        NSUInteger j;
+        _GLFWmonitor* monitor;
+
         CGDirectDisplayID screenDisplayID = CGDisplayMirrorsDisplay(displays[i]);
         if (screenDisplayID == kCGNullDirectDisplay)
             screenDisplayID = displays[i];
-        
-        const CGSize size = CGDisplayScreenSize(displays[i]);
-        char* name = getDisplayName(displays[i]);
-        
-        monitors[found] = _glfwAllocMonitor(name, size.width, size.height);
-        monitors[found]->ns.displayID = displays[i];
-        
-        free(name);
-        
+
         for (j = 0;  j < [screens count];  j++)
         {
             NSScreen* screen = [screens objectAtIndex:j];
             NSDictionary* dictionary = [screen deviceDescription];
             NSNumber* number = [dictionary objectForKey:@"NSScreenNumber"];
-            
+
             if ([number unsignedIntegerValue] == screenDisplayID)
-            {
-                monitors[found]->ns.screen = screen;
                 break;
-            }
         }
-        
-        if (monitors[found]->ns.screen)
-            found++;
-        else
-        {
-            _glfwFreeMonitor(monitors[found]);
-            monitors[found] = NULL;
-        }
+
+        // Skip displays that has no screen
+        if (j == [screens count])
+            continue;
+
+        const CGSize size = CGDisplayScreenSize(displays[i]);
+        char* name = getDisplayName(displays[i]);
+
+        monitor = _glfwAllocMonitor(name, size.width, size.height);
+        monitor->ns.displayID = displays[i];
+
+        free(name);
+
+        found++;
+        monitors[found - 1] = monitor;
     }
-    
+
     free(displays);
-    
+
     *count = found;
     return monitors;
 }
@@ -396,54 +393,51 @@ GLboolean _glfwPlatformIsSameMonitor(_GLFWmonitor* first, _GLFWmonitor* second)
 void _glfwPlatformGetMonitorPos(_GLFWmonitor* monitor, int* xpos, int* ypos)
 {
     const CGRect bounds = CGDisplayBounds(monitor->ns.displayID);
-    
+
     if (xpos)
         *xpos = (int) bounds.origin.x;
     if (ypos)
         *ypos = (int) bounds.origin.y;
 }
 
-GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* found)
+GLFWvidmode* _glfwPlatformGetVideoModes(_GLFWmonitor* monitor, int* count)
 {
     CFArrayRef modes;
-    CFIndex count, i, j;
+    CFIndex found, i, j;
     GLFWvidmode* result;
     CVDisplayLinkRef link;
-    
+
+    *count = 0;
+
     CVDisplayLinkCreateWithCGDisplay(monitor->ns.displayID, &link);
-    
+
     modes = CGDisplayCopyAllDisplayModes(monitor->ns.displayID, NULL);
-    count = CFArrayGetCount(modes);
-    
-    result = calloc(count, sizeof(GLFWvidmode));
-    *found = 0;
-    
-    for (i = 0;  i < count;  i++)
+    found = CFArrayGetCount(modes);
+    result = calloc(found, sizeof(GLFWvidmode));
+
+    for (i = 0;  i < found;  i++)
     {
         CGDisplayModeRef dm = (CGDisplayModeRef) CFArrayGetValueAtIndex(modes, i);
         if (!modeIsGood(dm))
             continue;
-        
+
         const GLFWvidmode mode = vidmodeFromCGDisplayMode(dm, link);
-        
-        for (j = 0;  j < *found;  j++)
+
+        for (j = 0;  j < *count;  j++)
         {
             if (_glfwCompareVideoModes(result + j, &mode) == 0)
                 break;
         }
-        
-        if (i < *found)
-        {
-            // This is a duplicate, so skip it
+
+        // Skip duplicate modes
+        if (i < *count)
             continue;
-        }
-        
-        result[*found] = mode;
-        (*found)++;
+
+        (*count)++;
+        result[*count - 1] = mode;
     }
-    
+
     CFRelease(modes);
-    
     CVDisplayLinkRelease(link);
     return result;
 }
@@ -452,13 +446,13 @@ void _glfwPlatformGetVideoMode(_GLFWmonitor* monitor, GLFWvidmode *mode)
 {
     CGDisplayModeRef displayMode;
     CVDisplayLinkRef link;
-    
+
     CVDisplayLinkCreateWithCGDisplay(monitor->ns.displayID, &link);
-    
+
     displayMode = CGDisplayCopyDisplayMode(monitor->ns.displayID);
     *mode = vidmodeFromCGDisplayMode(displayMode, link);
     CGDisplayModeRelease(displayMode);
-    
+
     CVDisplayLinkRelease(link);
 }
 
@@ -466,23 +460,23 @@ void _glfwPlatformGetGammaRamp(_GLFWmonitor* monitor, GLFWgammaramp* ramp)
 {
     uint32_t i, size = CGDisplayGammaTableCapacity(monitor->ns.displayID);
     CGGammaValue* values = calloc(size * 3, sizeof(CGGammaValue));
-    
+
     CGGetDisplayTransferByTable(monitor->ns.displayID,
                                 size,
                                 values,
                                 values + size,
                                 values + size * 2,
                                 &size);
-    
+
     _glfwAllocGammaArrays(ramp, size);
-    
+
     for (i = 0; i < size; i++)
     {
         ramp->red[i]   = (unsigned short) (values[i] * 65535);
         ramp->green[i] = (unsigned short) (values[i + size] * 65535);
         ramp->blue[i]  = (unsigned short) (values[i + size * 2] * 65535);
     }
-    
+
     free(values);
 }
 
@@ -490,20 +484,20 @@ void _glfwPlatformSetGammaRamp(_GLFWmonitor* monitor, const GLFWgammaramp* ramp)
 {
     int i;
     CGGammaValue* values = calloc(ramp->size * 3, sizeof(CGGammaValue));
-    
+
     for (i = 0;  i < ramp->size;  i++)
     {
         values[i]                  = ramp->red[i] / 65535.f;
         values[i + ramp->size]     = ramp->green[i] / 65535.f;
         values[i + ramp->size * 2] = ramp->blue[i] / 65535.f;
     }
-    
+
     CGSetDisplayTransferByTable(monitor->ns.displayID,
                                 ramp->size,
                                 values,
                                 values + ramp->size,
                                 values + ramp->size * 2);
-    
+
     free(values);
 }
 

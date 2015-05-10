@@ -224,15 +224,15 @@ GLFWAPI id glfwGetCocoaWindow(GLFWwindow* window);
  */
 GLFWAPI id glfwGetNSGLContext(GLFWwindow* window);
 #endif
-
-#if defined(GLFW_EXPOSE_NATIVE_CGL)
-/*! @brief Returns the `CGLContextObj` of the specified window.
- *  @return The `CGLContextObj` of the specified window.
- *  @ingroup native
- */
-GLFWAPI CGLContextObj glfwGetCGLContext(GLFWwindow* window);
-#endif
     
+#if defined(GLFW_EXPOSE_NATIVE_CGL)
+    /*! @brief Returns the `CGLContextObj` of the specified window.
+     *  @return The `CGLContextObj` of the specified window.
+     *  @ingroup native
+     */
+    GLFWAPI CGLContextObj glfwGetCGLContext(GLFWwindow* window);
+#endif
+
 #if defined(GLFW_EXPOSE_NATIVE_X11)
 /*! @brief Returns the `Display` used by GLFW.
  *

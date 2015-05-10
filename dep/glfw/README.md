@@ -62,6 +62,11 @@ GLFW bundles a number of dependencies in the `deps/` directory.
 
 ## Changelog
 
+ - Bugfix: Initialization failed on headless systems
+ - Bugfix: The cached current context could get out of sync
+ - [Cocoa] Bugfix: The cached `NSScreen` for a monitor could get out of sync
+ - [Cocoa] Bugfix: The `GLFW_AUTO_ICONIFY` window hint was ignored
+
 
 ## Contact
 
@@ -99,6 +104,7 @@ skills.
  - Doug Binks
  - blanco
  - Martin Capitanio
+ - Chi-kwan Chan
  - Lambert Clara
  - Andrew Corrigan
  - Noel Cower
@@ -125,6 +131,7 @@ skills.
  - Osman Keskin
  - Cameron King
  - Peter Knut
+ - Eric Larson
  - Robin Leffmann
  - Glenn Lewis
  - Shane Liesegang
@@ -151,6 +158,7 @@ skills.
  - Peoro
  - Braden Pellett
  - Arturo J. Pérez
+ - Emmanuel Gil Peyrot
  - Cyril Pichard
  - Pieroman
  - Jorge Rodriguez
@@ -169,6 +177,7 @@ skills.
  - Julian Squires
  - Johannes Stein
  - Justin Stoecker
+ - Elviss Strazdins
  - Nathan Sweet
  - TTK-Bandit
  - Sergey Tikhomirov

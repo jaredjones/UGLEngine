@@ -32,6 +32,23 @@
 #include <crt_externs.h>
 
 
+// Returns the NSScreen corresponding to the specified CGDirectDisplayID
+//
+static NSScreen* getScreen(CGDirectDisplayID displayID)
+{
+    NSArray* screens = [NSScreen screens];
+
+    for (NSScreen* screen in screens)
+    {
+        NSDictionary* dictionary = [screen deviceDescription];
+        NSNumber* number = [dictionary objectForKey:@"NSScreenNumber"];
+        if ([number unsignedIntegerValue] == displayID)
+            return screen;
+    }
+
+    return nil;
+}
+
 // Returns the specified standard cursor
 //
 static NSCursor* getStandardCursor(int shape)
@@ -89,7 +106,7 @@ static GLboolean enterFullscreenMode(_GLFWwindow* window)
 
     // NOTE: The window is resized despite mode setting failure to make
     //       glfwSetWindowSize more robust
-    [window->ns.object setFrame:[window->monitor->ns.screen frame]
+    [window->ns.object setFrame:[getScreen(window->monitor->ns.displayID) frame]
                         display:YES];
 
     return status;
@@ -195,7 +212,7 @@ static NSRect convertRectToBacking(_GLFWwindow* window, NSRect contentRect)
 
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
-    if (window->monitor)
+    if (window->monitor && window->autoIconify)
         enterFullscreenMode(window);
 
     if (_glfw.focusedWindow == window &&
@@ -210,7 +227,7 @@ static NSRect convertRectToBacking(_GLFWwindow* window, NSRect contentRect)
 
 - (void)windowDidResignKey:(NSNotification *)notification
 {
-    if (window->monitor)
+    if (window->monitor && window->autoIconify)
         leaveFullscreenMode(window);
 
     _glfwInputWindowFocus(window, GL_FALSE);
@@ -838,7 +855,7 @@ static GLboolean createWindow(_GLFWwindow* window,
     NSRect contentRect;
 
     if (wndconfig->monitor)
-        contentRect = [wndconfig->monitor->ns.screen frame];
+        contentRect = [getScreen(wndconfig->monitor->ns.displayID) frame];
     else
         contentRect = NSMakeRect(0, 0, wndconfig->width, wndconfig->height);
 
@@ -865,7 +882,9 @@ static GLboolean createWindow(_GLFWwindow* window,
     if (wndconfig->monitor)
     {
         [window->ns.object setLevel:NSMainMenuWindowLevel + 1];
-        [window->ns.object setHidesOnDeactivate:YES];
+
+        if (window->autoIconify)
+            [window->ns.object setHidesOnDeactivate:YES];
     }
     else
     {

@@ -112,24 +112,18 @@ static GLboolean chooseFBConfigs(const _GLFWctxconfig* ctxconfig,
         _GLFWfbconfig* u = usableConfigs + usableCount;
 
 #if defined(_GLFW_X11)
+        // Only consider EGLConfigs with associated visuals
         if (!getConfigAttrib(n, EGL_NATIVE_VISUAL_ID))
-        {
-            // Only consider EGLConfigs with associated visuals
             continue;
-        }
 #endif // _GLFW_X11
 
+        // Only consider RGB(A) EGLConfigs
         if (!(getConfigAttrib(n, EGL_COLOR_BUFFER_TYPE) & EGL_RGB_BUFFER))
-        {
-            // Only consider RGB(A) EGLConfigs
             continue;
-        }
 
+        // Only consider window EGLConfigs
         if (!(getConfigAttrib(n, EGL_SURFACE_TYPE) & EGL_WINDOW_BIT))
-        {
-            // Only consider window EGLConfigs
             continue;
-        }
 
         if (ctxconfig->api == GLFW_OPENGL_ES_API)
         {
@@ -270,8 +264,8 @@ int _glfwCreateContext(_GLFWwindow* window,
         }
         else
         {
-            // some EGL drivers don't implement the EGL_NATIVE_VISUAL_ID
-            // attribute, so attempt to find the closest match.
+            // Some EGL drivers do not implement the EGL_NATIVE_VISUAL_ID
+            // attribute, so attempt to find the closest match
 
             eglGetConfigAttrib(_glfw.egl.display, config,
                                EGL_RED_SIZE, &redBits);
@@ -320,17 +314,17 @@ int _glfwCreateContext(_GLFWwindow* window,
 
     if (_glfw.egl.KHR_create_context)
     {
-        int index = 0, mask = 0, flags = 0, strategy = 0;
+        int index = 0, mask = 0, flags = 0;
 
         if (ctxconfig->api == GLFW_OPENGL_API)
         {
+            if (ctxconfig->forward)
+                flags |= EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR;
+
             if (ctxconfig->profile == GLFW_OPENGL_CORE_PROFILE)
                 mask |= EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT_KHR;
             else if (ctxconfig->profile == GLFW_OPENGL_COMPAT_PROFILE)
                 mask |= EGL_CONTEXT_OPENGL_COMPATIBILITY_PROFILE_BIT_KHR;
-
-            if (ctxconfig->forward)
-                flags |= EGL_CONTEXT_OPENGL_FORWARD_COMPATIBLE_BIT_KHR;
         }
 
         if (ctxconfig->debug)
@@ -339,9 +333,15 @@ int _glfwCreateContext(_GLFWwindow* window,
         if (ctxconfig->robustness)
         {
             if (ctxconfig->robustness == GLFW_NO_RESET_NOTIFICATION)
-                strategy = EGL_NO_RESET_NOTIFICATION_KHR;
+            {
+                setEGLattrib(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR,
+                             EGL_NO_RESET_NOTIFICATION_KHR);
+            }
             else if (ctxconfig->robustness == GLFW_LOSE_CONTEXT_ON_RESET)
-                strategy = EGL_LOSE_CONTEXT_ON_RESET_KHR;
+            {
+                setEGLattrib(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR,
+                             EGL_LOSE_CONTEXT_ON_RESET_KHR);
+            }
 
             flags |= EGL_CONTEXT_OPENGL_ROBUST_ACCESS_BIT_KHR;
         }
@@ -357,9 +357,6 @@ int _glfwCreateContext(_GLFWwindow* window,
 
         if (flags)
             setEGLattrib(EGL_CONTEXT_FLAGS_KHR, flags);
-
-        if (strategy)
-            setEGLattrib(EGL_CONTEXT_OPENGL_RESET_NOTIFICATION_STRATEGY_KHR, strategy);
 
         setEGLattrib(EGL_NONE, EGL_NONE);
     }
