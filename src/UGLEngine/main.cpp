@@ -52,8 +52,8 @@ int main(int argc, const char * argv[])
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_SAMPLES, 8);
     
-    GLFWwindow *window = glfwCreateWindow(800, 600, "UGLEngine", NULL, NULL);
-    
+    GLFWwindow *window = glfwCreateWindow(800, 600, "UGLEngine", nullptr, nullptr);
+
     if (!window)
     {
         glfwTerminate();
@@ -66,7 +66,6 @@ int main(int argc, const char * argv[])
     
     if (strcmp(CONFIG, "Debug") == 0)
     {
-        printf("DEBUG ENABLED FOR WORKING DIR!\n");
         chdir(CURRENT_WORKING_DIRECTORY);
     }
     
