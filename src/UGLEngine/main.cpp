@@ -37,6 +37,7 @@ void render(GLFWwindow *w);
 
 int main(int argc, const char * argv[])
 {
+    printf("%s-%s-%s\n", CONFIG, PLATFORM_TEXT, ARCH);
     ApplePathSetup();
     
     if (!glfwInit())
@@ -63,9 +64,12 @@ int main(int argc, const char * argv[])
     //Start Render and Logic threads.
     std::thread ren(render, window);
     
-#if defined(DEBUG) || defined(_DEBUG)
-    chdir(CURRENT_WORKING_DIRECTORY);
-#endif
+    if (strcmp(CONFIG, "Debug") == 0)
+    {
+        printf("DEBUG ENABLED FOR WORKING DIR!\n");
+        chdir(CURRENT_WORKING_DIRECTORY);
+    }
+    
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
     
@@ -145,7 +149,7 @@ void render(GLFWwindow *w)
     sWMC.Init();
     sWMC.CompileAndStoreShader("lit", "Shaders/Lit.vsh", "Shaders/Lit.fsh");
     sWMC.CompileAndStoreShader("skybox", "Shaders/Skybox.vsh", "Shaders/Skybox.fsh");
-
+    
     GLuint programID = sWMC.GetShader("lit");
     //Model3D *myTest = new Model3D("Resources/Models/trashcan.wvf", false);
     
@@ -303,7 +307,7 @@ void render(GLFWwindow *w)
     
     float rotDeg = 0.0f;
     float lightZ = 4;
-
+    
     
     double lastTime = 0;
     int nbFrames = 0;
@@ -390,16 +394,16 @@ double lastLogicTime = 0;
 int nbLogicFrames = 0;
 void gameUpdate(GLFWwindow *w)
 {
-        double currentTime = glfwGetTime();
-        nbLogicFrames++;
-        // If last prinf() was more than 1 sec ago
-        if ( currentTime - lastLogicTime >= 1.0 )
-        {
-            // printf and reset timer
-            printf("Logic FPS:%f ms/F:%f\n", 1/(1.0/double(nbLogicFrames)), 1000.0/double(nbLogicFrames));
-            nbLogicFrames = 0;
-            lastLogicTime += 1.0;
-        }
+    double currentTime = glfwGetTime();
+    nbLogicFrames++;
+    // If last prinf() was more than 1 sec ago
+    if ( currentTime - lastLogicTime >= 1.0 )
+    {
+        // printf and reset timer
+        printf("Logic FPS:%f ms/F:%f\n", 1/(1.0/double(nbLogicFrames)), 1000.0/double(nbLogicFrames));
+        nbLogicFrames = 0;
+        lastLogicTime += 1.0;
+    }
     computeMatricesFromInputs(w);
 }
 

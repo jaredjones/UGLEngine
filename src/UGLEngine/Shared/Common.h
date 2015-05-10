@@ -97,6 +97,13 @@
 #define CONFIG "Release"
 #endif
 
+#ifdef CMAKE_INTDIR
+#undef CONFIG
+#define CONFIG CMAKE_INTDIR
+#endif
+
+
+
 #if PLATFORM != PLATFORM_WIN32
 #ifdef _LP64
 #define ARCH "X64"
