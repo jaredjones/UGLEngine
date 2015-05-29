@@ -311,6 +311,9 @@ void render(GLFWwindow *w)
     double lastTime = 0;
     int nbFrames = 0;
     
+    //Set the background color that is used when glClear is called
+    glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
+    
     //Renderer Loop
     while (!Closing)
     {
@@ -325,8 +328,6 @@ void render(GLFWwindow *w)
             lastTime += 1.0;
         }
         
-        //Set the background color that is used when glClear is called
-        glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
         //Clear both the depth and color buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
