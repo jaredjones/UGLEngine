@@ -68,6 +68,7 @@ target_link_libraries(uglengine glfw
   ${JEMALLOC_LIBRARY}
   ${CMAKE_THREAD_LIBS_INIT}
   ${GLFW_LIBRARIES}
+  ${OPENGL_LIBRARIES}
 )
 
 if( APPLE )

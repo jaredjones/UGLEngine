@@ -29,6 +29,8 @@ endif()
 include(CheckPlatform)
 
 find_package(PCHSupport)
+find_package(OpenGL REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS} )
 
 if( NOT WITHOUT_GIT )
 	find_package(git)
