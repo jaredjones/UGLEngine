@@ -19,7 +19,7 @@ private:
     static std::string FRAG_FILE;
 public:
     StaticShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
-        
+        LinkShader();
     }
     
     void BindAttributes();

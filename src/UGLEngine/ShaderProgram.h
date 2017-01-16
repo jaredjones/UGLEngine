@@ -21,6 +21,7 @@ private:
     static GLuint LoadShader(std::string file, GLint type);
 public:
     ShaderProgram(std::string vertexFile, std::string fragFile);
+    void LinkShader();
     void Start();
     void Stop();
     void CleanUp();

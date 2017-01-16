@@ -18,6 +18,10 @@ ShaderProgram::ShaderProgram(std::string vertexFile, std::string fragFile) {
     this->programID = glCreateProgram();
     glAttachShader(programID, vertexShaderID);
     glAttachShader(programID, fragmentShaderID);
+}
+
+void ShaderProgram::LinkShader() {
+    BindAttributes();
     glLinkProgram(programID);
     
     //Note: Since this validates the program for the given OpenGL state, this will claim that no VAO is bound
