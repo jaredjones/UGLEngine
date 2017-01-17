@@ -29,6 +29,8 @@
 #include "Loader.h"
 #include "Renderer.h"
 #include "StaticShader.h"
+#include "ModelTexture.h"
+#include "TexturedModel.h"
 
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 600;
@@ -102,9 +104,18 @@ int main(int argc, const char * argv[])
         0,1,3,3,1,2
     };
     
+    float texCoords[] = {
+        0,0,
+        0,1,
+        1,1,
+        1,0
+    };
     
     RawModel *model = loader->LoadToVao(std::vector<float>(std::begin(vertices), std::end(vertices)),
+                                        std::vector<float>(std::begin(texCoords), std::end(texCoords)),
                                         std::vector<int>(std::begin(indices), std::end(indices)));
+    ModelTexture *texture = new ModelTexture(loader->LoadTexture("Resources/stones.bmp"));
+    TexturedModel *texturedModel = new TexturedModel(model, texture);
     
     while(!glfwWindowShouldClose(window))
     {
@@ -114,7 +125,8 @@ int main(int argc, const char * argv[])
         renderer->Prepare();
         
         staticShader->Start();
-        renderer->Render(model);
+        staticShader->LoadTransformationMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
+        renderer->Render(texturedModel);
         staticShader->Stop();
         
         glfwSwapBuffers(window);

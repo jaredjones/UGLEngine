@@ -8,6 +8,7 @@
 
 #include "ShaderProgram.h"
 #include <fstream>
+#include <gtc/type_ptr.hpp>
 
 ShaderProgram::ShaderProgram(std::string vertexFile, std::string fragFile) {
     this->vertexShaderID = LoadShader(vertexFile, GL_VERTEX_SHADER);
@@ -21,6 +22,7 @@ ShaderProgram::ShaderProgram(std::string vertexFile, std::string fragFile) {
 }
 
 void ShaderProgram::LinkShader() {
+    //All attributes must be bound before the program is linked
     BindAttributes();
     glLinkProgram(programID);
     
@@ -40,6 +42,17 @@ void ShaderProgram::LinkShader() {
     if (infoLogLength != 0){
         //error = true;
     }
+    
+    //Loads up all Uniforms for the shader
+    GetAllUniformLocations();
+}
+
+GLuint ShaderProgram::GetUniformLocation(std::string uniformName) {
+    return glGetUniformLocation(programID, uniformName.c_str());
+}
+
+void ShaderProgram::GetAllUniformLocations() {
+    printf("ShaderProgram::GetAllUniformLocations() is not implemented in base class\n");
 }
 
 GLuint ShaderProgram::LoadShader(std::string file, GLint type) {
@@ -87,6 +100,26 @@ GLuint ShaderProgram::LoadShader(std::string file, GLint type) {
 
 void ShaderProgram::BindAttribute(GLuint attributeIndex, std::string variable) {
     glBindAttribLocation(programID, attributeIndex, variable.c_str());
+}
+
+void ShaderProgram::LoadInt(int location, int value) {
+    glUniform1i(location, value);
+}
+
+void ShaderProgram::LoadFloat(int location, float value) {
+    glUniform1f(location, value);
+}
+
+void ShaderProgram::LoadVector(int location, glm::vec3 value) {
+    glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
+void ShaderProgram::LoadMatrix(int location, glm::mat4 value) {
+    glUniformMatrix4fv(location, 1, GL_FALSE, &value[0][0]);
+}
+
+void ShaderProgram::LoadBoolean(int location, bool value) {
+    glUniform1i(location, value);
 }
 
 void ShaderProgram::Start() {

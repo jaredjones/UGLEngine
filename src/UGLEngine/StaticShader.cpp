@@ -8,9 +8,18 @@
 
 #include "StaticShader.h"
 
-std::string StaticShader::VERTEX_FILE = "/Users/jaredjones/Downloads/vert.txt";
-std::string StaticShader::FRAG_FILE = "/Users/jaredjones/Downloads/frag.txt";
+std::string StaticShader::VERTEX_FILE = "Resources/vert.txt";
+std::string StaticShader::FRAG_FILE = "Resources/frag.txt";
 
 void StaticShader::BindAttributes() {
     ShaderProgram::BindAttribute(0, "position");
+    ShaderProgram::BindAttribute(1, "textureCoords");
+}
+
+void StaticShader::GetAllUniformLocations() {
+    location_transformationMatrix = ShaderProgram::GetUniformLocation("transformationMatrix");
+}
+
+void StaticShader::LoadTransformationMatrix(glm::mat4 matrix) {
+    ShaderProgram::LoadMatrix(location_transformationMatrix, matrix);
 }

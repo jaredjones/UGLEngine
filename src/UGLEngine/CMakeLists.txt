@@ -85,3 +85,7 @@ endif()
 if( USE_PCH )
 	add_cxx_pch(uglengine ${uglengine_PCH_HDR} ${uglengine_PCH_SRC})
 endif()
+
+add_custom_command(TARGET uglengine PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/Resources $<TARGET_FILE_DIR:uglengine>/Resources)

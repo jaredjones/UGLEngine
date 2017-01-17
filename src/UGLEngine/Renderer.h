@@ -11,11 +11,12 @@
 
 #include <stdio.h>
 #include <RawModel.h>
+#include <TexturedModel.h>
 
 class Renderer {
 public:
     Renderer();
-    void Render(RawModel *model);
+    void Render(TexturedModel *model);
     void Prepare();
 private:
     
