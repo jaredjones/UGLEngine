@@ -20,6 +20,7 @@ float FAR_PLANE = 1000.0f;
 
 Renderer::Renderer(StaticShader *shader) {
     glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
     projectionMatrix = glm::perspective(FOV, 800.0f/ 600.0f, NEAR_PLANE, FAR_PLANE);
     
     shader->Start();
