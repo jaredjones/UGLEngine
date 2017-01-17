@@ -8,11 +8,11 @@
 
 #include "Loader.h"
 
-RawModel* Loader::LoadToVao(std::vector<float> positions, std::vector<float>textureCoords, std::vector<int> indices) {
+RawModel* Loader::LoadToVao(std::vector<glm::vec3> positions, std::vector<glm::vec2>textureCoords, std::vector<uint> indices) {
     int vaoID = createVAO();
     BindIndicesBuffer(indices);
-    StoreDataInAttributeList(0, 3, positions);
-    StoreDataInAttributeList(1, 2, textureCoords);
+    StoreDataInAttributeList(0, positions);
+    StoreDataInAttributeList(1, textureCoords);
     UnbindVAO();
     return new RawModel(vaoID, indices.size());
 }
@@ -24,21 +24,33 @@ int Loader::createVAO() {
     return vaoID;
     
 }
-void Loader::StoreDataInAttributeList(int attributeIndex, int sizePerComponent, std::vector<float> data) {
+void Loader::StoreDataInAttributeList(int attributeIndex, std::vector<glm::vec3> data) {
     GLuint vboID;
     vbos.push_back(vboID);
     glGenBuffers(1, &vboID);
     glBindBuffer(GL_ARRAY_BUFFER, vboID);
-    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec3), &data[0], GL_STATIC_DRAW);
     
-    glVertexAttribPointer(attributeIndex, sizePerComponent, GL_FLOAT, false, 0, 0);
+    
+    glVertexAttribPointer(attributeIndex, 3, GL_FLOAT, false, 0, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+void Loader::StoreDataInAttributeList(int attributeIndex, std::vector<glm::vec2> data) {
+    GLuint vboID;
+    vbos.push_back(vboID);
+    glGenBuffers(1, &vboID);
+    glBindBuffer(GL_ARRAY_BUFFER, vboID);
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(glm::vec2), &data[0], GL_STATIC_DRAW);
+    
+    glVertexAttribPointer(attributeIndex, 2, GL_FLOAT, false, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Loader::UnbindVAO() {
     glBindVertexArray(0);
 }
 
-void Loader::BindIndicesBuffer(std::vector<int> indices) {
+void Loader::BindIndicesBuffer(std::vector<uint> indices) {
     GLuint vboID;
     vbos.push_back(vboID);
     glGenBuffers(1, &vboID);
@@ -86,24 +98,24 @@ int Loader::LoadTexture(std::string fileName) {
     // If less than 54 bytes are read, problem
     if ( fread(header, 1, 54, file)!=54 )
     {
-        printf("Not a correct BMP file\n");
+        printf("Not a correct BMP file: Header is less than 54 bytes\n");
         return 0;
     }
     // A BMP files always begins with "BM"
     if ( header[0]!='B' || header[1]!='M' )
     {
-        printf("Not a correct BMP file\n");
+        printf("Not a correct BMP file: Does not begin with BM\n");
         return 0;
     }
     // Make sure this is a 24bpp file
     if ( *(int*)&(header[0x1E])!=0  )
     {
-        printf("Not a correct BMP file\n");
+        printf("Not a correct BMP file: Compression was used at level: %d\n", *(int*)&(header[0x1E]));
         return 0;
     }
     if ( *(int*)&(header[0x1C])!=24 )
     {
-        printf("Not a correct BMP file\n");
+        printf("Not a correct BMP file: Not 24bpp\n");
         return 0;
     }
     

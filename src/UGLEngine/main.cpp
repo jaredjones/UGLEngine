@@ -94,94 +94,26 @@ int main(int argc, const char * argv[])
     StaticShader *staticShader = new StaticShader();
     Renderer *renderer = new Renderer(staticShader);
     
-    float vertices[] = {
-        -0.5f,0.5f,-0.5f,
-        -0.5f,-0.5f,-0.5f,
-        0.5f,-0.5f,-0.5f,
-        0.5f,0.5f,-0.5f,
-        
-        -0.5f,0.5f,0.5f,
-        -0.5f,-0.5f,0.5f,
-        0.5f,-0.5f,0.5f,
-        0.5f,0.5f,0.5f,
-        
-        0.5f,0.5f,-0.5f,
-        0.5f,-0.5f,-0.5f,
-        0.5f,-0.5f,0.5f,
-        0.5f,0.5f,0.5f,
-        
-        -0.5f,0.5f,-0.5f,
-        -0.5f,-0.5f,-0.5f,
-        -0.5f,-0.5f,0.5f,
-        -0.5f,0.5f,0.5f,
-        
-        -0.5f,0.5f,0.5f,
-        -0.5f,0.5f,-0.5f,
-        0.5f,0.5f,-0.5f,
-        0.5f,0.5f,0.5f,
-        
-        -0.5f,-0.5f,0.5f,
-        -0.5f,-0.5f,-0.5f,
-        0.5f,-0.5f,-0.5f,
-        0.5f,-0.5f,0.5f
-        
-    };
+ 
+    uIntStorage indices;
+    vec3Storage vertices;
+    vec2Storage uvs;
+    vec3Storage normals;
+    vec3Storage tangents;
+    vec3Storage bitangents;
     
-    float texCoords[] = {
-        
-        0,0,
-        0,1,
-        1,1,
-        1,0,
-        0,0,
-        0,1,
-        1,1,
-        1,0,
-        0,0,
-        0,1,
-        1,1,
-        1,0,
-        0,0,
-        0,1,
-        1,1,
-        1,0,
-        0,0,
-        0,1,
-        1,1,
-        1,0,
-        0,0,
-        0,1,
-        1,1,
-        1,0
-        
-        
-    };
+    loadOBJ("Resources/dwarf.obj", indices, vertices, uvs, normals, tangents, bitangents);
     
-    int indices[] = {
-        0,1,3,	
-        3,1,2,	
-        4,5,7,
-        7,5,6,
-        8,9,11,
-        11,9,10,
-        12,13,15,
-        15,13,14,	
-        16,17,19,
-        19,17,18,
-        20,21,23,
-        23,21,22
-        
-    };
     
-    RawModel *model = loader->LoadToVao(std::vector<float>(std::begin(vertices), std::end(vertices)),
-                                        std::vector<float>(std::begin(texCoords), std::end(texCoords)),
-                                        std::vector<int>(std::begin(indices), std::end(indices)));
-    ModelTexture *texture = new ModelTexture(loader->LoadTexture("Resources/stones.bmp"));
+    RawModel *model = loader->LoadToVao(vertices,
+                                        uvs,
+                                        indices);
+    ModelTexture *texture = new ModelTexture(loader->LoadTexture("Resources/dwarf.bmp"));
     TexturedModel *texturedModel = new TexturedModel(model, texture);
     Entity *entity = new Entity(texturedModel,
-                                glm::vec3(0.0f, 0.0f, -5.0f),    //position
+                                glm::vec3(0.0f, -0.5f, -2.0f),    //position
                                 glm::vec3(0.0f, 0.0f, 0.0f),    //rotation
-                                glm::vec3(1.0f, 1.0f, 1.0f));   //scale
+                                glm::vec3(5.0f, 5.0f, 5.0f));   //scale
     
     Camera *camera = new Camera(window);
     
@@ -200,7 +132,7 @@ int main(int argc, const char * argv[])
         staticShader->Stop();
         
         //entity->IncreasePosition(glm::vec3(0.002, 0, 0));
-        //entity->IncreateRotation(glm::vec3(1,0,0));
+        entity->IncreateRotation(glm::vec3(0,1,0));
         glfwSwapBuffers(window);
     }
     
