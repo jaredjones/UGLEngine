@@ -31,6 +31,7 @@
 #include "StaticShader.h"
 #include "ModelTexture.h"
 #include "TexturedModel.h"
+#include "Camera.h"
 
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 600;
@@ -90,8 +91,8 @@ int main(int argc, const char * argv[])
     std::cout << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
     
     Loader *loader = new Loader();
-    Renderer *renderer = new Renderer();
     StaticShader *staticShader = new StaticShader();
+    Renderer *renderer = new Renderer(staticShader);
     
     float vertices[] = {
         -0.5f, 0.5f, 0.0f,
@@ -116,19 +117,29 @@ int main(int argc, const char * argv[])
                                         std::vector<int>(std::begin(indices), std::end(indices)));
     ModelTexture *texture = new ModelTexture(loader->LoadTexture("Resources/stones.bmp"));
     TexturedModel *texturedModel = new TexturedModel(model, texture);
+    Entity *entity = new Entity(texturedModel,
+                                glm::vec3(0.0f, 0.0f, -5.0f),    //position
+                                glm::vec3(0.0f, 0.0f, 0.0f),    //rotation
+                                glm::vec3(1.0f, 1.0f, 1.0f));   //scale
+    
+    Camera *camera = new Camera(window);
     
     while(!glfwWindowShouldClose(window))
     {
         //Poll events for stuff like the keyboard, mouse, trackpad, etc.
         glfwPollEvents();
         
+        camera->Move();
+        glm::mat4 viewMatrix = camera->GetViewMatrix();
         renderer->Prepare();
         
         staticShader->Start();
-        staticShader->LoadTransformationMatrix(glm::scale(glm::mat4(1.0f), glm::vec3(2.0f)));
-        renderer->Render(texturedModel);
+        staticShader->LoadViewMatrix(viewMatrix);
+        renderer->Render(entity, staticShader);
         staticShader->Stop();
         
+        //entity->IncreasePosition(glm::vec3(0.002, 0, 0));
+        //entity->IncreateRotation(glm::vec3(1,0,0));
         glfwSwapBuffers(window);
     }
     

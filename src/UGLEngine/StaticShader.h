@@ -20,6 +20,8 @@ private:
     static std::string FRAG_FILE;
     
     GLuint location_transformationMatrix;
+    GLuint location_viewMatrix;
+    GLuint location_projectionMatrix;
 public:
     StaticShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
         LinkShader();
@@ -28,6 +30,8 @@ public:
     void BindAttributes();
     void GetAllUniformLocations();
     void LoadTransformationMatrix(glm::mat4 matrix);
+    void LoadViewMatrix(glm::mat4 matrix);
+    void LoadProjectionMatrix(glm::mat4 matrix);
 };
 
 #endif /* StaticShader_h */

@@ -10,15 +10,20 @@
 #define Renderer_h
 
 #include <stdio.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 #include <RawModel.h>
 #include <TexturedModel.h>
+#include "Entity.h"
+#include "StaticShader.h"
 
 class Renderer {
-public:
-    Renderer();
-    void Render(TexturedModel *model);
-    void Prepare();
 private:
+    glm::mat4 projectionMatrix;
+public:
+    Renderer(StaticShader *shader);
+    void Render(Entity *entity, StaticShader *shader);
+    void Prepare();
     
 };
 
