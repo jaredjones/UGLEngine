@@ -24,9 +24,6 @@
 //
 //========================================================================
 
-#ifndef _glfw3_wayland_platform_h_
-#define _glfw3_wayland_platform_h_
-
 #include <wayland-client.h>
 #include <xkbcommon/xkbcommon.h>
 #include <xkbcommon/xkbcommon-compose.h>
@@ -46,11 +43,12 @@ typedef struct VkWaylandSurfaceCreateInfoKHR
 typedef VkResult (APIENTRY *PFN_vkCreateWaylandSurfaceKHR)(VkInstance,const VkWaylandSurfaceCreateInfoKHR*,const VkAllocationCallbacks*,VkSurfaceKHR*);
 typedef VkBool32 (APIENTRY *PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR)(VkPhysicalDevice,uint32_t,struct wl_display*);
 
-#include "posix_tls.h"
+#include "posix_thread.h"
 #include "posix_time.h"
 #include "linux_joystick.h"
 #include "xkb_unicode.h"
 #include "egl_context.h"
+#include "osmesa_context.h"
 
 #include "wayland-relative-pointer-unstable-v1-client-protocol.h"
 #include "wayland-pointer-constraints-unstable-v1-client-protocol.h"
@@ -78,6 +76,7 @@ typedef struct _GLFWwindowWayland
     int                         width, height;
     GLFWbool                    visible;
     GLFWbool                    maximized;
+    GLFWbool                    transparent;
     struct wl_surface*          surface;
     struct wl_egl_window*       native;
     struct wl_shell_surface*    shellSurface;
@@ -168,4 +167,3 @@ typedef struct _GLFWcursorWayland
 
 void _glfwAddOutputWayland(uint32_t name, uint32_t version);
 
-#endif // _glfw3_wayland_platform_h_
