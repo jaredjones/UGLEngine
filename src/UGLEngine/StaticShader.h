@@ -13,6 +13,7 @@
 #include <string>
 #include <glm.hpp>
 #include "ShaderProgram.h"
+#include "Light.h"
 
 class StaticShader: public ShaderProgram {
 private:
@@ -22,9 +23,17 @@ private:
     GLuint location_transformationMatrix;
     GLuint location_viewMatrix;
     GLuint location_projectionMatrix;
+    GLuint location_lightPosition;
+    GLuint location_lightColor;
+    GLuint location_shineDamper;
+    GLuint location_reflectivity;
 public:
     StaticShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
         LinkShader();
+    }
+    
+    virtual ~StaticShader() {
+        
     }
     
     void BindAttributes();
@@ -32,6 +41,8 @@ public:
     void LoadTransformationMatrix(glm::mat4 matrix);
     void LoadViewMatrix(glm::mat4 matrix);
     void LoadProjectionMatrix(glm::mat4 matrix);
+    void LoadLight(Light *light);
+    void LoadShineVariables(float damper, float reflectivity);
 };
 
 #endif /* StaticShader_h */

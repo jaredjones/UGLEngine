@@ -19,6 +19,10 @@ void Camera::Move() {
         this->position.x += 0.02f;
     if (glfwGetKey(this->window, GLFW_KEY_Q) == GLFW_PRESS)
         this->position.x -= 0.02f;
+    if (glfwGetKey(this->window, GLFW_KEY_X) == GLFW_PRESS)
+        this->position.y -= 0.02f;
+    if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        this->position.y += 0.02f;
     
     this->_calculateViewMatrix();
 }

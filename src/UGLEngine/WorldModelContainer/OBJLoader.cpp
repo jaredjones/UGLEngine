@@ -256,9 +256,9 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
             printf("Unsupported wavefront command on line %d in %s : %s\n", lineCounter, path, line.c_str());
         }     
     }
-    if (vIndices.size() >= 65535)
+    /*if (vIndices.size() >= 65535)
         printf("WARNING: This mesh is over UINT16 in size, rendering issues may arrise if you use VBOIndexing! This warning isn't checking to see if VBOIndexing is used. However if this warning ever fires please contact Jared immediately, as it is likely an appropriate time to fix the weakness in the engine.\n");
-    
+    */
     /*for (unsigned int i = 0; i < vIndices.size(); i++)
      out_verticies.push_back(tmpVerts[vIndices[i] - 1]);
      
@@ -281,7 +281,7 @@ bool loadOBJ(const char *path, uIntStorage &out_indices, vec3Storage &out_vertic
     return true;
 }
 
-bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
+/*bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_verticies, vec2Storage &out_uvs, vec3Storage &out_normals, vec3Storage &out_tangents, vec3Storage &out_bitangents, bool transthorpulate, bool triangulate)
 {
     uIntStorage vboIndices;
     
@@ -291,4 +291,4 @@ bool loadOBJ(const char *path, uShortStorage &out_indices, vec3Storage &out_vert
         out_indices.push_back((unsigned short)i);
     
     return out;
-}
+}*/

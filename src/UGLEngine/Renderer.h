@@ -20,9 +20,14 @@
 class Renderer {
 private:
     glm::mat4 projectionMatrix;
+    StaticShader *shader;
 public:
     Renderer(StaticShader *shader);
-    void Render(Entity *entity, StaticShader *shader);
+    void Render(std::unordered_map<TexturedModel *, std::list<Entity *>> *entities);
+    void PrepareTexturedModel(TexturedModel *model);
+    void UnbindTexturedModel();
+    void PrepareInstance(Entity *entity);
+    //void Render(Entity *entity, StaticShader *shader);
     void Prepare();
     
 };

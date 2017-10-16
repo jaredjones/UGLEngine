@@ -23,6 +23,7 @@ private:
     static GLuint LoadShader(std::string file, GLint type);
 public:
     ShaderProgram(std::string vertexFile, std::string fragFile);
+    ~ShaderProgram();
     void LinkShader();
     GLuint GetUniformLocation(std::string uniformName);
     virtual void GetAllUniformLocations() = 0;

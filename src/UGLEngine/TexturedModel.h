@@ -12,6 +12,8 @@
 #include "RawModel.h"
 #include "ModelTexture.h"
 #include <stdio.h>
+#include <cstdlib>
+
 
 class TexturedModel {
 private:
@@ -19,7 +21,10 @@ private:
     ModelTexture *texture;
     
 public:
+    int hashRand;
     TexturedModel(RawModel *model, ModelTexture *texture) {
+        
+        this->hashRand = std::rand();
         this->rawModel = model;
         this->texture = texture;
     }
@@ -31,6 +36,27 @@ public:
     ModelTexture* getModelTexture() {
         return texture;
     }
+    
+    // Bullshit for implementing hashing for unordered_map on a custom class
+    bool operator ==(const TexturedModel & obj) const
+    {
+        return hashRand == obj.hashRand;
+    }
 };
+
+
+// Bullshit for implementing hashing for unordered_map on a custom class
+namespace std
+{
+    template<>
+    struct std::hash<TexturedModel>
+    {
+        size_t
+        operator()(const TexturedModel & obj) const
+        {
+            return std::hash<int>()(obj.hashRand);
+        }
+    };
+}
 
 #endif /* TexturedModel_h */

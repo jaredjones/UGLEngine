@@ -21,6 +21,11 @@ ShaderProgram::ShaderProgram(std::string vertexFile, std::string fragFile) {
     glAttachShader(programID, fragmentShaderID);
 }
 
+ShaderProgram::~ShaderProgram()
+{
+    
+}
+
 void ShaderProgram::LinkShader() {
     //All attributes must be bound before the program is linked
     BindAttributes();

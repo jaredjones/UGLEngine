@@ -23,7 +23,7 @@ public:
     ~Loader() {
     }
     
-    RawModel* LoadToVao(std::vector<glm::vec3> positions, std::vector<glm::vec2>textureCoords, std::vector<uint> indices);
+    RawModel* LoadToVao(std::vector<glm::vec3> positions, std::vector<glm::vec2>textureCoords, std::vector<glm::vec3> normals, std::vector<uint> indices);
     int LoadTexture(std::string fileName);
     int createVAO();
     void StoreDataInAttributeList(int attributeIndex, std::vector<glm::vec3> data);

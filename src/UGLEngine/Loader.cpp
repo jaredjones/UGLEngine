@@ -8,11 +8,12 @@
 
 #include "Loader.h"
 
-RawModel* Loader::LoadToVao(std::vector<glm::vec3> positions, std::vector<glm::vec2>textureCoords, std::vector<uint> indices) {
+RawModel* Loader::LoadToVao(std::vector<glm::vec3> positions, std::vector<glm::vec2>textureCoords, std::vector<glm::vec3> normals, std::vector<uint> indices) {
     int vaoID = createVAO();
     BindIndicesBuffer(indices);
     StoreDataInAttributeList(0, positions);
     StoreDataInAttributeList(1, textureCoords);
+    StoreDataInAttributeList(2, normals);
     UnbindVAO();
     return new RawModel(vaoID, indices.size());
 }
