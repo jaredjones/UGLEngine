@@ -72,6 +72,7 @@ int main(int argc, const char * argv[])
     
     char * dir = getcwd(NULL, 0);
     std::cout << "Current dir: " << dir << std::endl;
+    free(dir);
     
     //Make this thread and window writable for OpenGL Calls
     glfwMakeContextCurrent(window);

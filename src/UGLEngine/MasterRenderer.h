@@ -21,14 +21,14 @@
 class MasterRenderer {
     StaticShader *shader;
     Renderer *renderer;
-    std::unordered_map<TexturedModel*, std::list<Entity*>> *entities;
+    std::unordered_map<TexturedModel*, std::list<Entity*> *> *entities;
     
 public:
     MasterRenderer()
     {
         shader = new StaticShader();
         renderer = new Renderer(shader);
-        entities = new std::unordered_map<TexturedModel*, std::list<Entity*>>();
+        entities = new std::unordered_map<TexturedModel*, std::list<Entity*> *>();
     }
     
     ~MasterRenderer()

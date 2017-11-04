@@ -23,7 +23,7 @@ private:
     StaticShader *shader;
 public:
     Renderer(StaticShader *shader);
-    void Render(std::unordered_map<TexturedModel *, std::list<Entity *>> *entities);
+    void Render(std::unordered_map<TexturedModel *, std::list<Entity *> *> *entities);
     void PrepareTexturedModel(TexturedModel *model);
     void UnbindTexturedModel();
     void PrepareInstance(Entity *entity);

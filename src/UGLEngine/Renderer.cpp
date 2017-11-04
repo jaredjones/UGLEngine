@@ -31,12 +31,12 @@ Renderer::Renderer(StaticShader *shader) {
     shader->Stop();
 }
 
-void Renderer::Render(std::unordered_map<TexturedModel *, std::list<Entity *>> *entities) {
+void Renderer::Render(std::unordered_map<TexturedModel *, std::list<Entity *> *> *entities) {
     for ( const auto &e : *entities )
     {
         this->PrepareTexturedModel(e.first);
-        std::list<Entity *> batch = e.second;
-        for ( const auto &i : batch)
+        std::list<Entity *> *batch = e.second;
+        for ( const auto &i : *batch)
         {
             this->PrepareInstance(i);
             glDrawElements(GL_TRIANGLES, e.first->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);

@@ -15,7 +15,7 @@ void MasterRenderer::Render(Light *sun, Camera *camera)
     this->shader->LoadViewMatrix(camera->GetViewMatrix());
     this->renderer->Render(this->entities);
     this->shader->Stop();
-    this->entities->clear();
+    this->CleanUp();
 }
 
 void MasterRenderer::ProcessEntity(Entity *entity)
@@ -24,16 +24,23 @@ void MasterRenderer::ProcessEntity(Entity *entity)
     
     auto search = this->entities->find(entityModel);
     if(search != this->entities->end()) {
-        std::list<Entity *> batch = search->second;
-        batch.push_back(entity);
+        std::list<Entity *> *batch = search->second;
+        batch->push_back(entity);
     } else {
         std::list<Entity *> *newBatch = new std::list<Entity *>();
         newBatch->push_back(entity);
-        this->entities->insert(std::make_pair(entityModel, *newBatch));
+        this->entities->insert(std::make_pair(entityModel, newBatch));
     }
 }
 
 void MasterRenderer::CleanUp()
 {
-    
+    std::for_each(this->entities->begin(), this->entities->end(),
+        [](std::pair<TexturedModel *, std::list<Entity *> *> element)
+                  {
+                      std::list<Entity *> *e = element.second;
+                      delete e;
+                  });
+
+    this->entities->clear();
 }
