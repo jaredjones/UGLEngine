@@ -1,13 +1,13 @@
 //
-//  Renderer.h
+//  EntityRenderer.h
 //  UGLEngine
 //
 //  Created by Jared Jones on 1/14/17.
 //
 //
 
-#ifndef Renderer_h
-#define Renderer_h
+#ifndef EntityRenderer_h
+#define EntityRenderer_h
 
 #include <stdio.h>
 #include <glm.hpp>
@@ -17,19 +17,16 @@
 #include "Entity.h"
 #include "StaticShader.h"
 
-class Renderer {
+class EntityRenderer {
 private:
-    glm::mat4 projectionMatrix;
     StaticShader *shader;
 public:
-    Renderer(StaticShader *shader);
+    EntityRenderer(StaticShader *shader, glm::mat4 projectionMatrix);
     void Render(std::unordered_map<TexturedModel *, std::list<Entity *> *> *entities);
     void PrepareTexturedModel(TexturedModel *model);
     void UnbindTexturedModel();
     void PrepareInstance(Entity *entity);
-    //void Render(Entity *entity, StaticShader *shader);
-    void Prepare();
     
 };
 
-#endif /* Renderer_h */
+#endif /* EntityRenderer_h */

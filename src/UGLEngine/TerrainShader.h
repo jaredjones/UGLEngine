@@ -1,13 +1,13 @@
 //
-//  StaticShader.h
+//  TerrainShader.h
 //  UGLEngine
 //
 //  Created by Jared Jones on 1/16/17.
 //
 //
 
-#ifndef StaticShader_h
-#define StaticShader_h
+#ifndef TerrainShader_h
+#define TerrainShader_h
 
 #include <stdio.h>
 #include <string>
@@ -15,7 +15,7 @@
 #include "ShaderProgram.h"
 #include "Light.h"
 
-class StaticShader: public ShaderProgram {
+class TerrainShader: public ShaderProgram {
 private:
     static std::string VERTEX_FILE;
     static std::string FRAG_FILE;
@@ -28,11 +28,11 @@ private:
     GLuint location_shineDamper;
     GLuint location_reflectivity;
 public:
-    StaticShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
+    TerrainShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
         LinkShader();
     }
     
-    virtual ~StaticShader() {
+    virtual ~TerrainShader() {
         
     }
     
@@ -45,5 +45,4 @@ public:
     void LoadShineVariables(float damper, float reflectivity);
 };
 
-#endif /* StaticShader_h */
-
+#endif /* TerrainShader_h */

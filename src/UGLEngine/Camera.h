@@ -26,7 +26,7 @@ private:
 public:
     Camera(GLFWwindow *window) {
         this->window = window;
-        this->position = glm::vec3(0.0f, 0.0f, 0.0f);
+        this->position = glm::vec3(0.0f, 0.1f, 0.0f);
         this->pitch = 0.0f;
         this->yaw = 0.0f;
         this->roll = 0.0f;

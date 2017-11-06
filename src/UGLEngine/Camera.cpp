@@ -23,7 +23,10 @@ void Camera::Move() {
         this->position.y -= 0.02f;
     if (glfwGetKey(this->window, GLFW_KEY_SPACE) == GLFW_PRESS)
         this->position.y += 0.02f;
-    
+    if (glfwGetKey(this->window, GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey(this->window, GLFW_KEY_D) == GLFW_PRESS)
+        this->yaw += (360.0f/60.0f)/5.0f;
+    if (glfwGetKey(this->window, GLFW_KEY_LEFT) == GLFW_PRESS || glfwGetKey(this->window, GLFW_KEY_A) == GLFW_PRESS)
+        this->yaw -= (360.0f/60.0f)/5.0f;
     this->_calculateViewMatrix();
 }
 

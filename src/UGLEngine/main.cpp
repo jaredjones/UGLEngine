@@ -27,13 +27,14 @@
 #include "OBJLoader.h"
 #include "VBOIndexer.h"
 #include "Loader.h"
-#include "Renderer.h"
+#include "EntityRenderer.h"
 #include "StaticShader.h"
 #include "ModelTexture.h"
 #include "TexturedModel.h"
 #include "Camera.h"
 #include "Light.h"
 #include "MasterRenderer.h"
+#include "Terrain.h"
 
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 600;
@@ -114,13 +115,24 @@ int main(int argc, const char * argv[])
     TexturedModel *texturedModel = new TexturedModel(model, texture);
     texture->SetShineDamper(10.0f);
     texture->SetReflectivity(1.0f);
-    Entity *entity = new Entity(texturedModel,
-                                glm::vec3(0.0f, -0.5f, -2.0f),    //position
-                                glm::vec3(0.0f, 0.0f, 0.0f),    //rotation
-                                glm::vec3(0.1f, 0.1f, 0.1f));   //scale
-    Light *light = new Light(glm::vec3(20, 0, 0), glm::vec3(1,1,1));
     
+    std::vector<Entity *> allDragonEntities;
+    
+    for (int i = 0; i < 2; i++)
+    {
+        Entity *entity = new Entity(texturedModel,
+                                    glm::vec3(0.0f, 0.0f, -3.0f - i),    //position
+                                    glm::vec3(0.0f, 0.0f, 0.0f),    //rotation
+                                    glm::vec3(0.1f, 0.1f, 0.1f));   //scale
+        allDragonEntities.push_back(entity);
+    }
+    
+    Terrain *terrain = new Terrain(0, 0, loader, new ModelTexture(loader->LoadTexture("Resources/stone.bmp")));
+    Terrain *terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader->LoadTexture("Resources/stone.bmp")));
+    
+    Light *light = new Light(glm::vec3(2, 1, -2), glm::vec3(1,1,1));
     Camera *camera = new Camera(window);
+    
     MasterRenderer *renderer = new MasterRenderer();
     while(!glfwWindowShouldClose(window))
     {
@@ -129,11 +141,16 @@ int main(int argc, const char * argv[])
         
         camera->Move();
         
-        renderer->ProcessEntity(entity);
+        for(std::vector<Entity *>::size_type i = 0; i != allDragonEntities.size(); i++) {
+            renderer->ProcessEntity(allDragonEntities[i]);
+            allDragonEntities[i]->IncreateRotation(glm::vec3(0,1,0));
+        }
+        renderer->ProcessTerrain(terrain);
+        renderer->ProcessTerrain(terrain2);
         
         renderer->Render(light, camera);
         //entity->IncreasePosition(glm::vec3(0.002, 0, 0));
-        entity->IncreateRotation(glm::vec3(0,1,0));
+        //entity->IncreateRotation(glm::vec3(0,1,0));
         glfwSwapBuffers(window);
     }
     
