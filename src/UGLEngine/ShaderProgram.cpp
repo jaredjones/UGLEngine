@@ -124,7 +124,7 @@ void ShaderProgram::LoadMatrix(int location, glm::mat4 value) {
 }
 
 void ShaderProgram::LoadBoolean(int location, bool value) {
-    glUniform1i(location, value);
+    glUniform1i(location, (int)value);
 }
 
 void ShaderProgram::Start() {

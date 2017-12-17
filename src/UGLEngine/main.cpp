@@ -21,7 +21,6 @@
 #include <Common.h>
 #include <Utilities.h>
 #include "WorldModelContainer.h"
-#include "ImageLoader.h"
 #include "Model3D.h"
 #include "CameraController.h"
 #include "OBJLoader.h"
@@ -107,25 +106,50 @@ int main(int argc, const char * argv[])
     loadOBJ("Resources/dragon.obj", indices, vertices, uvs, normals, tangents, bitangents);
     
     
-    RawModel *model = loader->LoadToVao(vertices,
-                                        uvs,
-                                        normals,
-                                        indices);
-    ModelTexture *texture = new ModelTexture(loader->LoadTexture("Resources/dwarf.bmp"));
-    TexturedModel *texturedModel = new TexturedModel(model, texture);
-    texture->SetShineDamper(10.0f);
-    texture->SetReflectivity(1.0f);
+    RawModel *dragonModel = loader->LoadToVao(vertices,
+                                              uvs,
+                                              normals,
+                                              indices);
+    
+    uIntStorage indices1;
+    vec3Storage vertices1;
+    vec2Storage uvs1;
+    vec3Storage normals1;
+    vec3Storage tangents1;
+    vec3Storage bitangents1;
+    loadOBJ("Resources/grassModel.obj", indices1, vertices1, uvs1, normals1, tangents1, bitangents1);
+    RawModel *grassModel = loader->LoadToVao(vertices1,
+                                                uvs1,
+                                                normals1,
+                                                indices1);
+    
+    
+    ModelTexture *dwarfTex = new ModelTexture(loader->LoadTexture("Resources/dwarf.bmp"));
+    dwarfTex->SetShineDamper(10.0f);
+    dwarfTex->SetReflectivity(1.0f);
+    TexturedModel *texturedDragon = new TexturedModel(dragonModel, dwarfTex);
     
     std::vector<Entity *> allDragonEntities;
     
     for (int i = 0; i < 2; i++)
     {
-        Entity *entity = new Entity(texturedModel,
+        Entity *entity = new Entity(texturedDragon,
                                     glm::vec3(0.0f, 0.0f, -3.0f - i),    //position
                                     glm::vec3(0.0f, 0.0f, 0.0f),    //rotation
                                     glm::vec3(0.1f, 0.1f, 0.1f));   //scale
         allDragonEntities.push_back(entity);
     }
+    
+    ModelTexture *grassTex = new ModelTexture(loader->LoadTexture("Resources/grass.dds"));
+    grassTex->SetShineDamper(10.0f);
+    grassTex->SetReflectivity(1.0f);
+    grassTex->SetForcedUpdatedNormals(true);
+    grassTex->SetTransparency(true);
+    TexturedModel *texturedGrass = new TexturedModel(grassModel, grassTex);
+    Entity *grass = new Entity(texturedGrass, glm::vec3(1.0f, 0.12f, -1.0f),    //position
+                               glm::vec3(180.0f, 0.0f, 0.0f),    //rotation
+                               glm::vec3(0.1f, 0.1f, 0.1f));   //scale
+    
     
     Terrain *terrain = new Terrain(0, 0, loader, new ModelTexture(loader->LoadTexture("Resources/stone.bmp")));
     Terrain *terrain2 = new Terrain(1, 0, loader, new ModelTexture(loader->LoadTexture("Resources/stone.bmp")));
@@ -147,6 +171,7 @@ int main(int argc, const char * argv[])
         }
         renderer->ProcessTerrain(terrain);
         renderer->ProcessTerrain(terrain2);
+        renderer->ProcessEntity(grass);
         
         renderer->Render(light, camera);
         //entity->IncreasePosition(glm::vec3(0.002, 0, 0));

@@ -14,6 +14,7 @@
 #include <trigonometric.hpp>
 #include <gtx/transform.hpp>
 #include "EntityRenderer.h"
+#include "MasterRenderer.h"
 
 EntityRenderer::EntityRenderer(StaticShader *shader, glm::mat4 projectionMatrix) {
     this->shader = shader;
@@ -44,6 +45,9 @@ void EntityRenderer::PrepareTexturedModel(TexturedModel *model) {
     glEnableVertexAttribArray(2);
     
     ModelTexture *texture = model->getModelTexture();
+    if (texture->HasTransparency())
+        MasterRenderer::SetCulling(false);
+    shader->LoadForcedUpwardNormals(texture->HasForcedUpwardNormals());
     shader->LoadShineVariables(texture->GetShineDamper(), texture->GetReflectivity());
     
     if (texture != NULL)
@@ -54,6 +58,7 @@ void EntityRenderer::PrepareTexturedModel(TexturedModel *model) {
 }
 
 void EntityRenderer::UnbindTexturedModel() {
+    MasterRenderer::SetCulling(true); // Renable culling for next model
     glDisableVertexAttribArray(2);
     glDisableVertexAttribArray(1);
     glDisableVertexAttribArray(0);

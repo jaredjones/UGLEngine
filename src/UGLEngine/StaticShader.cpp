@@ -25,6 +25,7 @@ void StaticShader::GetAllUniformLocations() {
     location_lightColor = ShaderProgram::GetUniformLocation("lightColor");
     location_shineDamper = ShaderProgram::GetUniformLocation("shineDamper");
     location_reflectivity = ShaderProgram::GetUniformLocation("reflectivity");
+    location_forceUpwardNormals = ShaderProgram::GetUniformLocation("forceUpwardNormals");
 }
 
 void StaticShader::LoadTransformationMatrix(glm::mat4 matrix) {
@@ -47,4 +48,8 @@ void StaticShader::LoadLight(Light *light) {
 void StaticShader::LoadShineVariables(float damper, float reflectivity) {
     ShaderProgram::LoadFloat(location_shineDamper, damper);
     ShaderProgram::LoadFloat(location_reflectivity, reflectivity);
+}
+
+void StaticShader::LoadForcedUpwardNormals(bool enabled) {
+    ShaderProgram::LoadBoolean(location_forceUpwardNormals, enabled);
 }

@@ -40,8 +40,7 @@ public:
     MasterRenderer()
     {
         glClearColor(93.0f/255.0f, 161.0f/255.0f, 219.0f/255.0f, 1.0f);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
+        MasterRenderer::SetCulling(true);
         
         projectionMatrix = glm::perspective(FOV, 800.0f/ 600.0f, NEAR_PLANE, FAR_PLANE);
         shader = new StaticShader();
@@ -68,6 +67,16 @@ public:
     void ProcessTerrain(Terrain *terrain);
     void Prepare();
     void CleanUp();
+    
+    static void SetCulling(bool enabled)
+    {
+        if (enabled) {
+            glEnable(GL_CULL_FACE);
+            glCullFace(GL_BACK);
+        } else {
+            glDisable(GL_CULL_FACE);
+        }
+    }
 };
 
 

@@ -27,6 +27,7 @@ private:
     GLuint location_lightColor;
     GLuint location_shineDamper;
     GLuint location_reflectivity;
+    GLuint location_forceUpwardNormals;
 public:
     StaticShader(): ShaderProgram(VERTEX_FILE, FRAG_FILE) {
         LinkShader();
@@ -43,6 +44,7 @@ public:
     void LoadProjectionMatrix(glm::mat4 matrix);
     void LoadLight(Light *light);
     void LoadShineVariables(float damper, float reflectivity);
+    void LoadForcedUpwardNormals(bool enabled);
 };
 
 #endif /* StaticShader_h */
